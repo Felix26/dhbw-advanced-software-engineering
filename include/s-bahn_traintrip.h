@@ -4,8 +4,8 @@
 
 class SBahnTrainTrip : public TrainTrip
 {
-    using TrainTrip::TrainTrip;
-
     public:
+        using TrainTrip::TrainTrip;
+
         std::string getTransportType() const override;
 };

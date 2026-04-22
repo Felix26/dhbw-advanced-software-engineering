@@ -3,7 +3,11 @@
 #include <fstream>
 #include <iostream>
 
-#include "traintrip.h"
+#include "fernverkehr_traintrip.h"
+#include "regionalverkehr_traintrip.h"
+#include "s-bahn_traintrip.h"
+#include "u-bahn_traintrip.h"
+#include "tram_traintrip.h"
 #include "bustrip.h"
 #include "station.h"
 #include "json.hpp"
@@ -91,8 +95,33 @@ std::vector<std::shared_ptr<Trip>> TripParser::parse()
             }
             Operator op(opId, opName);
 
-            auto train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, lineName, op);
-            
+            std::shared_ptr<TrainTrip> train;
+            if(category == "express")
+            {
+                train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, lineName, op);
+            }
+            else if(category == "regional")
+            {
+                train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, lineName, op);
+            }
+            else if(category == "suburban")
+            {
+                train = std::make_shared<SBahnTrainTrip>(statusId, origin, dest, distance, lineName, op);
+            }
+            else if(category == "tram")
+            {
+                train = std::make_shared<TramTrainTrip>(statusId, origin, dest, distance, lineName, op);
+            }
+            else if(category == "subway")
+            {
+                train = std::make_shared<UBahnTrainTrip>(statusId, origin, dest, distance, lineName, op);
+            }
+            else
+            {
+                std::cerr << "Unknown category: " << category << '\n';
+                continue;
+            }
+
             // extract stopovers from global trip node
             if(item.contains("trip") && item["trip"].contains("stopovers") && item["trip"]["stopovers"].is_array())
             {

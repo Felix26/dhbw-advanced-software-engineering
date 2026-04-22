@@ -1,5 +1,9 @@
 #include "faketripparser.h"
-#include "traintrip.h"
+#include "fernverkehr_traintrip.h"
+#include "regionalverkehr_traintrip.h"
+#include "s-bahn_traintrip.h"
+#include "u-bahn_traintrip.h"
+#include "tram_traintrip.h"
 #include "bustrip.h"
 #include "station.h"
 #include "operator.h"
@@ -22,23 +26,23 @@ std::vector<std::shared_ptr<Trip>> FakeTripParser::parse()
     Operator vagfr(12, "VAG Freiburg");
 
     // 1. Fernverkehr: ICE von Freiburg nach Mannheim
-    auto ice = std::make_shared<TrainTrip>(1001, freiburg, mannheim, 200000, "ICE 75", dbFern);
+    auto ice = std::make_shared<FernverkehrTrainTrip>(1001, freiburg, mannheim, 200000, "ICE 75", dbFern);
     ice->addStopover(offenburg);
     ice->addStopover(karlsruhe);
     result.push_back(ice);
 
     // 2. Regionalverkehr: RE7 von Offenburg nach Freiburg
-    auto re7 = std::make_shared<TrainTrip>(1002, offenburg, freiburg, 63000, "RE7", dbRegio);
+    auto re7 = std::make_shared<RegionalverkehrTrainTrip>(1002, offenburg, freiburg, 63000, "RE7", dbRegio);
     re7->addStopover(emmendingen);
     re7->addStopover(denzlingen);
     result.push_back(re7);
 
     // 3. Regionalverkehr: RB26 von Freiburg nach Denzlingen
-    auto rb26 = std::make_shared<TrainTrip>(1003, freiburg, denzlingen, 12000, "RB26", dbRegio);
+    auto rb26 = std::make_shared<SBahnTrainTrip>(1003, freiburg, denzlingen, 12000, "S4", dbRegio);
     result.push_back(rb26);
 
     // 4. Tram: Linie 1 in Freiburg
-    auto tram = std::make_shared<TrainTrip>(1004, bertoldsbrunnen, stadttheater, 800, "Linie 1", vagfr);
+    auto tram = std::make_shared<TramTrainTrip>(1004, bertoldsbrunnen, stadttheater, 800, "Linie 1", vagfr);
     result.push_back(tram);
 
     // 5. Bus: Bus in Freiburg
