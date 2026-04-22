@@ -2,8 +2,8 @@
 #include <iomanip>
 #include <memory>
 #include <vector>
-#include "iparser.h"
-#include "parserFactory.h"
+#include "parser/iparser.h"
+#include "parser/parserFactory.h"
 #include "trips/trip.h"
 #include "trips/traintrip.h"
 #include "station.h"

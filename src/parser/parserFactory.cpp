@@ -1,7 +1,7 @@
-#include "parserFactory.h"
+#include "parser/parserFactory.h"
 
-#include "tripparser.h"
-#include "faketripparser.h"
+#include "parser/tripparser.h"
+#include "parser/faketripparser.h"
 
 std::unique_ptr<IParser> ParserFactory::createParserFromFile(const std::string &filePath)
 {

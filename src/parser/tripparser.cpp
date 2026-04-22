@@ -1,4 +1,4 @@
-#include "tripparser.h"
+#include "parser/tripparser.h"
 
 #include <fstream>
 #include <iostream>

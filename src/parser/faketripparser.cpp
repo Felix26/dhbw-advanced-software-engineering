@@ -1,4 +1,4 @@
-#include "faketripparser.h"
+#include "parser/faketripparser.h"
 #include "trips/fernverkehr_traintrip.h"
 #include "trips/regionalverkehr_traintrip.h"
 #include "trips/s-bahn_traintrip.h"
