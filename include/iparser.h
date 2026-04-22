@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "trip.h"
+#include "trips/trip.h"
 
 class IParser
 {

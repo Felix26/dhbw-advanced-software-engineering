@@ -1,4 +1,4 @@
-#include "s-bahn_traintrip.h"
+#include "trips/s-bahn_traintrip.h"
 
 std::string SBahnTrainTrip::getTransportType() const
 {

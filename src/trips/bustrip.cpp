@@ -1,4 +1,4 @@
-#include "bustrip.h"
+#include "trips/bustrip.h"
 
 BusTrip::BusTrip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::string& busNumber) : Trip(id, origin, destination, distance, duration), mBusNumber(busNumber)
 {

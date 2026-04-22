@@ -1,4 +1,4 @@
-#include "trip.h"
+#include "trips/trip.h"
 
 Trip::Trip(int id, const Station& origin, const Station& destination, int distance, int duration) : mId(id), mOrigin(origin), mDestination(destination), distance(distance), duration(duration)
 {

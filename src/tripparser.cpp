@@ -3,12 +3,12 @@
 #include <fstream>
 #include <iostream>
 
-#include "fernverkehr_traintrip.h"
-#include "regionalverkehr_traintrip.h"
-#include "s-bahn_traintrip.h"
-#include "u-bahn_traintrip.h"
-#include "tram_traintrip.h"
-#include "bustrip.h"
+#include "trips/fernverkehr_traintrip.h"
+#include "trips/regionalverkehr_traintrip.h"
+#include "trips/s-bahn_traintrip.h"
+#include "trips/u-bahn_traintrip.h"
+#include "trips/tram_traintrip.h"
+#include "trips/bustrip.h"
 #include "station.h"
 #include "json.hpp"
 #include "operator.h"

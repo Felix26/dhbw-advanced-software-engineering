@@ -4,8 +4,8 @@
 #include <vector>
 #include "iparser.h"
 #include "parserFactory.h"
-#include "trip.h"
-#include "traintrip.h"
+#include "trips/trip.h"
+#include "trips/traintrip.h"
 #include "station.h"
 
 #ifdef _WIN32
@@ -40,8 +40,8 @@ int main()
         std::cout << "[" << trip->getTransportType() << "]" << std::endl;
         std::cout << "  Von:  " << trip->getOrigin().getName() << std::endl;
         std::cout << "  Nach: " << trip->getDestination().getName() << std::endl;
-        std::cout << "  Distanz: " << std::fixed << std::setprecision(2) 
-                  << (trip->getDistance() / 1000.0) << " km" << std::endl;
+        std::cout << "  Distanz: " << std::fixed << std::setprecision(2) << (trip->getDistance() / 1000.0) << " km" << std::endl;
+        std::cout << "  Dauer: " << trip->getDuration() << " min" << std::endl;
 
         auto train = std::dynamic_pointer_cast<TrainTrip>(trip);
         if (train)
