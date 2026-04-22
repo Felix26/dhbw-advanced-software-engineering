@@ -7,7 +7,7 @@
 class BusTrip : public Trip
 {
     public:
-        BusTrip(int id, const Station& origin, const Station& destination, int distance, const std::string& busNumber);
+        BusTrip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::string& busNumber);
         ~BusTrip() override = default;
 
         std::string getBusNumber() const;

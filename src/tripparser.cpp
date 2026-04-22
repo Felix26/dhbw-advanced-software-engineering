@@ -56,6 +56,7 @@ std::vector<std::shared_ptr<Trip>> TripParser::parse()
 
         std::string lineName = userJourneyNode.value("lineName", "Unknown");
         int distance = userJourneyNode.value("distance", 0);
+        int duration = userJourneyNode.value("duration", 0);
         std::string category = userJourneyNode.value("category", "");
 
         // extract origin
@@ -80,7 +81,7 @@ std::vector<std::shared_ptr<Trip>> TripParser::parse()
 
         if(category == "bus")
         {
-            auto bus = std::make_shared<BusTrip>(statusId, origin, dest, distance, lineName);
+            auto bus = std::make_shared<BusTrip>(statusId, origin, dest, distance, duration, lineName);
             result.push_back(bus);
         }
         else
@@ -98,23 +99,23 @@ std::vector<std::shared_ptr<Trip>> TripParser::parse()
             std::shared_ptr<TrainTrip> train;
             if(category == "express")
             {
-                train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, lineName, op);
+                train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
             }
             else if(category == "regional")
             {
-                train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, lineName, op);
+                train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
             }
             else if(category == "suburban")
             {
-                train = std::make_shared<SBahnTrainTrip>(statusId, origin, dest, distance, lineName, op);
+                train = std::make_shared<SBahnTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
             }
             else if(category == "tram")
             {
-                train = std::make_shared<TramTrainTrip>(statusId, origin, dest, distance, lineName, op);
+                train = std::make_shared<TramTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
             }
             else if(category == "subway")
             {
-                train = std::make_shared<UBahnTrainTrip>(statusId, origin, dest, distance, lineName, op);
+                train = std::make_shared<UBahnTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
             }
             else
             {

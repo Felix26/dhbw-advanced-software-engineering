@@ -1,6 +1,6 @@
 #include "trip.h"
 
-Trip::Trip(int id, const Station& origin, const Station& destination, int distance) : mId(id), mOrigin(origin), mDestination(destination), distance(distance)
+Trip::Trip(int id, const Station& origin, const Station& destination, int distance, int duration) : mId(id), mOrigin(origin), mDestination(destination), distance(distance), duration(duration)
 {
 
 }
@@ -23,4 +23,9 @@ Station Trip::getDestination() const
 int Trip::getDistance() const
 {
     return distance;
+}
+
+int Trip::getDuration() const
+{
+    return duration;
 }

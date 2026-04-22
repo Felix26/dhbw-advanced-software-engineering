@@ -10,7 +10,7 @@
 class TrainTrip : public Trip
 {
     public:
-        TrainTrip(int id, const Station& origin, const Station& destination, int distanceKm, const std::string& lineName, const Operator& op);
+        TrainTrip(int id, const Station& origin, const Station& destination, int distanceKm, int duration, const std::string& lineName, const Operator& op);
         ~TrainTrip() override = default;
 
         std::string getLineName() const;
