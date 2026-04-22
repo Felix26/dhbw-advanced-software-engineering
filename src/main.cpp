@@ -8,10 +8,18 @@
 #include "traintrip.h"
 #include "station.h"
 
+#ifdef _WIN32
+    #include <windows.h>
+#endif
+
 int main()
 {
-    //std::unique_ptr<IParser> tripParser = ParserFactory::createParserFromFile("../data/testdata.json");
-    std::unique_ptr<IParser> tripParser = ParserFactory::createMockParser();
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+    #endif
+
+    std::unique_ptr<IParser> tripParser = ParserFactory::createParserFromFile("../data/testdata.json");
+    //std::unique_ptr<IParser> tripParser = ParserFactory::createMockParser();
 
     std::cout << "--- Traewelling Statistik Tool: Datenimport-Test ---" << std::endl;
 
