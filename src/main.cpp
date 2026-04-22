@@ -3,16 +3,15 @@
 #include <memory>
 #include <vector>
 #include "iparser.h"
-#include "tripparser.h"
+#include "parserFactory.h"
 #include "trip.h"
 #include "traintrip.h"
 #include "station.h"
-#include "faketripparser.h"
 
 int main()
 {
-    //std::unique_ptr<IParser> tripParser = std::make_unique<TripParser>("../data/testdata.json");
-    std::unique_ptr<IParser> tripParser = std::make_unique<FakeTripParser>();
+    //std::unique_ptr<IParser> tripParser = ParserFactory::createParserFromFile("../data/testdata.json");
+    std::unique_ptr<IParser> tripParser = ParserFactory::createMockParser();
 
     std::cout << "--- Traewelling Statistik Tool: Datenimport-Test ---" << std::endl;
 
