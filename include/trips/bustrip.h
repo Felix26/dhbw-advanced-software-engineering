@@ -12,6 +12,7 @@ class BusTrip : public Trip
 
         std::string getBusNumber() const;
 
+        std::string getTransportName() const override;
         std::string getTransportType() const override;
 
     private:

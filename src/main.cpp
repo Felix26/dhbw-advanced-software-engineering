@@ -37,7 +37,7 @@ int main()
 
     for (const auto& trip : loadedTrips)
     {
-        std::cout << "[" << trip->getTransportType() << "]" << std::endl;
+        std::cout << "[" << trip->getTransportName() << "]" << std::endl;
         std::cout << "  Von:  " << trip->getOrigin().getName() << std::endl;
         std::cout << "  Nach: " << trip->getDestination().getName() << std::endl;
         std::cout << "  Distanz: " << std::fixed << std::setprecision(2) << (trip->getDistance() / 1000.0) << " km" << std::endl;

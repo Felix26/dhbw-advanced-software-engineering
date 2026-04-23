@@ -16,6 +16,7 @@ class Trip
         int getDistance() const;
         int getDuration() const;
 
+        virtual std::string getTransportName() const = 0;
         virtual std::string getTransportType() const = 0;
 
     protected:

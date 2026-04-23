@@ -6,7 +6,7 @@ std::map<std::string, int> TransportTypeStatistic::evaluate(const std::vector<st
 
     for (const auto& trip : trips)
     {
-        std::string transportType = trip->getTransportName();
+        std::string transportType = trip->getTransportType();
         transportTypeCounts[transportType]++;
     }
 

@@ -21,6 +21,7 @@ class TrainTrip : public Trip
         const std::vector<Station>& getStopovers() const;
         int getStopoverCount() const;
 
+        virtual std::string getTransportName() const override = 0;
         virtual std::string getTransportType() const override = 0;
 
     protected:
