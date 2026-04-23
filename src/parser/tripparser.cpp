@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <chrono>
 
 #include "trips/fernverkehr_traintrip.h"
 #include "trips/regionalverkehr_traintrip.h"
@@ -59,13 +60,18 @@ Trips TripParser::parse()
         int duration = userJourneyNode.value("duration", 0);
         std::string category = userJourneyNode.value("category", "");
 
-        // extract origin
+        
+        // extract origin and start time
         int originId = 0;
         std::string originName = "Unknown";
+        std::string startTimeStr;
         if(userJourneyNode.contains("origin"))
         {
             originId = userJourneyNode["origin"].value("id", 0);
             originName = userJourneyNode["origin"].value("name", "Unknown");
+
+            // If departureReal is empty, use departurePlanned
+            startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
         }
         Station origin(originId, originName);
 
@@ -79,9 +85,19 @@ Trips TripParser::parse()
         }
         Station dest(destId, destName);
 
+        std::chrono::system_clock::time_point startTime;
+        if(!startTimeStr.empty())
+        {
+            // Data format is eg "2026-04-02T10:20:00+00:00"
+            std::istringstream ss(startTimeStr);
+            std::chrono::system_clock::time_point tp;
+            ss >> std::chrono::parse("%Y-%m-%dT%H:%M:%S", tp);
+            startTime = tp;
+        }
+
         if(category == "bus")
         {
-            auto bus = std::make_shared<BusTrip>(statusId, origin, dest, distance, duration, lineName);
+            auto bus = std::make_shared<BusTrip>(statusId, origin, dest, distance, duration, startTime, lineName);
             result.push_back(bus);
         }
         else
@@ -99,23 +115,23 @@ Trips TripParser::parse()
             std::shared_ptr<TrainTrip> train;
             if(category == "express")
             {
-                train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
+                train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
             else if(category == "regional")
             {
-                train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
+                train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
             else if(category == "suburban")
             {
-                train = std::make_shared<SBahnTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
+                train = std::make_shared<SBahnTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
             else if(category == "tram")
             {
-                train = std::make_shared<TramTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
+                train = std::make_shared<TramTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
             else if(category == "subway")
             {
-                train = std::make_shared<UBahnTrainTrip>(statusId, origin, dest, distance, duration, lineName, op);
+                train = std::make_shared<UBahnTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
             else
             {
