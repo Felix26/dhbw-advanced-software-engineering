@@ -14,7 +14,7 @@ std::string BusTrip::getBusNumber() const
 std::string BusTrip::getTransportName() const
 {
     // z.B. "Bus (Linie 42)"
-    return "Bus (" + mBusNumber + ")";
+    return getTransportType() + " (" + mBusNumber + ")";
 }
 
 std::string BusTrip::getTransportType() const

@@ -30,3 +30,7 @@ int TrainTrip::getStopoverCount() const
 {
     return mStopovers.size();
 }
+std::string TrainTrip::getTransportName() const
+{
+    return getTransportType() + " (" + mLineName + ")";
+}

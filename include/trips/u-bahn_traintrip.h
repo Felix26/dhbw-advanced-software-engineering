@@ -7,6 +7,5 @@ class UBahnTrainTrip : public TrainTrip
     public:
         using TrainTrip::TrainTrip;
 
-        virtual std::string getTransportName() const override;
         virtual std::string getTransportType() const override;
 };
