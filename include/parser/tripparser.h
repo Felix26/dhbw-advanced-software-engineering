@@ -8,7 +8,7 @@ class TripParser : public IParser
         explicit TripParser(const std::string& filepath);
         ~TripParser() override = default;
 
-        std::vector<std::shared_ptr<Trip>> parse() override;
+        Trips parse() override;
 
     private:
         std::string mFilepath;

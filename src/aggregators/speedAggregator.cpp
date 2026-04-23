@@ -5,7 +5,7 @@
 #include "aggregators/durationAggregator.h"
 #include "aggregators/distanceAggregator.h"
 
-AggregatorResult<double> SpeedAggregator::aggregate(const std::vector<std::shared_ptr<Trip>> &trips) const
+AggregatorResult<double> SpeedAggregator::aggregate(const Trips &trips) const
 {
     DistanceAggregator distanceAggregator;
     DurationAggregator durationAggregator;

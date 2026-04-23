@@ -8,5 +8,5 @@ class FakeTripParser : public IParser
         FakeTripParser() = default;
         ~FakeTripParser() override = default;
 
-        std::vector<std::shared_ptr<Trip>> parse() override;
+        Trips parse() override;
 };

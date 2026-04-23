@@ -1,6 +1,6 @@
 #include "aggregators/durationAggregator.h"
 
-AggregatorResult<int> DurationAggregator::aggregate(const std::vector<std::shared_ptr<Trip>>& trips) const
+AggregatorResult<int> DurationAggregator::aggregate(const Trips& trips) const
 {
     int totalDuration = 0;
     for (const auto& trip : trips)

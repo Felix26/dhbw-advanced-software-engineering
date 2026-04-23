@@ -5,5 +5,5 @@
 class CountAggregator : public IAggregator<int>
 {
     public:
-        AggregatorResult<int> aggregate(const std::vector<std::shared_ptr<Trip>>& trips) const override;
+        AggregatorResult<int> aggregate(const Trips& trips) const override;
 };

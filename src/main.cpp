@@ -24,7 +24,7 @@ int main()
     std::cout << "--- Traewelling Statistik Tool: Datenimport-Test ---" << std::endl;
 
     // 2. Parse-Vorgang starten
-    std::vector<std::shared_ptr<Trip>> loadedTrips = tripParser->parse();
+    Trips loadedTrips = tripParser->parse();
 
     if (loadedTrips.empty())
     {

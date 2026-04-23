@@ -10,5 +10,5 @@ class IParser
     public:
         virtual ~IParser() = default;
 
-        virtual std::vector<std::shared_ptr<Trip>> parse() = 0;
+        virtual Trips parse() = 0;
 };

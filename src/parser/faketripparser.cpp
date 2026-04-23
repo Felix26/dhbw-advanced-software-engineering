@@ -8,9 +8,9 @@
 #include "station.h"
 #include "operator.h"
 
-std::vector<std::shared_ptr<Trip>> FakeTripParser::parse()
+Trips FakeTripParser::parse()
 {
-    std::vector<std::shared_ptr<Trip>> result;
+    Trips result;
 
     Station freiburg(1, "Freiburg (Breisgau) Hbf");
     Station offenburg(2, "Offenburg");

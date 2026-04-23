@@ -26,3 +26,5 @@ class Trip
         int distance; // m
         int duration; // min
 };
+
+using Trips = std::vector<std::shared_ptr<Trip>>;

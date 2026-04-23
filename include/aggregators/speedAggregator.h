@@ -6,5 +6,5 @@
 class SpeedAggregator : public IAggregator<double>
 {
     public:
-        AggregatorResult<double> aggregate(const std::vector<std::shared_ptr<Trip>>& trips) const override;
+        AggregatorResult<double> aggregate(const Trips& trips) const override;
 };

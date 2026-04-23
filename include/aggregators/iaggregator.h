@@ -18,5 +18,5 @@ class IAggregator
     public:
         virtual ~IAggregator() = default;
 
-        virtual AggregatorResult<T> aggregate(const std::vector<std::shared_ptr<Trip>>& trips) const = 0;
+        virtual AggregatorResult<T> aggregate(const Trips& trips) const = 0;
 };

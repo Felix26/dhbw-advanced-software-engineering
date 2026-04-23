@@ -19,9 +19,9 @@ TripParser::TripParser(const std::string& filepath) : mFilepath(filepath)
 {
 }
 
-std::vector<std::shared_ptr<Trip>> TripParser::parse()
+Trips TripParser::parse()
 {
-    std::vector<std::shared_ptr<Trip>> result;
+    Trips result;
 
     std::ifstream file(mFilepath);
     if(!file.is_open())
