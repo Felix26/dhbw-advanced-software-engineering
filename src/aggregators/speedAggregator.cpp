@@ -10,8 +10,8 @@ AggregatorResult<double> SpeedAggregator::aggregate(const std::vector<std::share
     DistanceAggregator distanceAggregator;
     DurationAggregator durationAggregator;
 
-    auto distanceResult = distanceAggregator.aggregate(trips);
-    auto durationResult = durationAggregator.aggregate(trips);
+    auto distanceResult = distanceAggregator.aggregate(trips); // distance in meters
+    auto durationResult = durationAggregator.aggregate(trips); // duration in minutes
 
     if(distanceResult.aggregationCount == 0 || distanceResult.aggregationCount != durationResult.aggregationCount)
     {
@@ -21,5 +21,7 @@ AggregatorResult<double> SpeedAggregator::aggregate(const std::vector<std::share
 
     // Calculate speed as distance divided by duration
     double speed = static_cast<double>(distanceResult.aggregationValue) / static_cast<double>(durationResult.aggregationValue);
+    speed *= 60.0; // Convert from m/min to m/h
+    speed /= 1000.0; // Convert from m/h to km/h
     return {speed, distanceResult.aggregationCount};
 }
