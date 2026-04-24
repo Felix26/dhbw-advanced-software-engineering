@@ -4,19 +4,29 @@
 #include "groupers/universalGrouper.h"
 #include "groupers/tripGroupers.h"
 #include "aggregators/distanceAggregator.h"
+#include "aggregators/countAggregator.h"
 #include "parser/parserFactory.h"
 #include "trips/trip.h"
 
 
 int main()
 {
-    auto data = ParserFactory::createParserFromFile("../data/testdata.json")->parse();
+    auto data = ParserFactory::createParserFromFolder("C:\\Users\\Felix\\Nextcloud\\Advanced SWE")->parse();
 
     auto groupedByTransportType = UniversalGrouper::groupTrips(data, TripGrouper::byTransportType());
+    auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byVisitedStations());
+
 
     for (const auto& [transportType, trips] : groupedByTransportType)
     {
         std::cout << "Transport Type: " << transportType << ", Count: " << DistanceAggregator().aggregate(trips).aggregationValue << std::endl;
+    }
+
+    for (const auto& [station, trips] : groupedByVisitedStations)
+    {
+        auto aggregationResult = CountAggregator().aggregate(trips);
+        if(aggregationResult.aggregationValue < 50) continue;
+        std::cout << "Station: " << station << ", Count: " << aggregationResult.aggregationValue << std::endl;
     }
 
     return 0;

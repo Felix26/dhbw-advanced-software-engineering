@@ -5,7 +5,7 @@
 class Station
 {
     public:
-        Station(int id, const std::string& name) : mID(id), mName(name) {}
+        Station(const std::string& name) : mName(name) {}
 
 
         bool operator==(const Station& other) const;
@@ -13,10 +13,8 @@ class Station
         friend std::ostream& operator<<(std::ostream& os, const Station& station);
 
 
-        int getId() const { return mID; }
         std::string getName() const { return mName; }
 
     private:
-        int mID;
         std::string mName;
 };

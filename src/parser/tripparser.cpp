@@ -62,28 +62,24 @@ Trips TripParser::parse()
 
         
         // extract origin and start time
-        int originId = 0;
         std::string originName = "Unknown";
         std::string startTimeStr;
         if(userJourneyNode.contains("origin"))
         {
-            originId = userJourneyNode["origin"].value("id", 0);
             originName = userJourneyNode["origin"].value("name", "Unknown");
 
             // If departureReal is empty, use departurePlanned
             startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
         }
-        Station origin(originId, originName);
+        Station origin(originName);
 
         // extract destination
-        int destId = 0;
         std::string destName = "Unknown";
         if(userJourneyNode.contains("destination"))
         {
-            destId = userJourneyNode["destination"].value("id", 0);
             destName = userJourneyNode["destination"].value("name", "Unknown");
         }
-        Station dest(destId, destName);
+        Station dest(destName);
 
         std::chrono::system_clock::time_point startTime;
         if(!startTimeStr.empty())
@@ -113,11 +109,11 @@ Trips TripParser::parse()
             Operator op(opId, opName);
 
             std::shared_ptr<TrainTrip> train;
-            if(category == "express")
+            if(category == "express" || category == "regionalExp" || (category == "nationalExpress" && lineName.find("IC") != std::string::npos)) // "regionalExp" is used for FlixTrains, "nationalExpress" is used for ICEs
             {
                 train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
-            else if(category == "regional")
+            else if(category == "regional" || category == "nationalExpress") // "nationalExpress" is used for french regional trains
             {
                 train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
             }
@@ -146,23 +142,22 @@ Trips TripParser::parse()
 
                 for(const auto& stopNode : item["trip"]["stopovers"])
                 {
-                    int stopId = stopNode.value("id", 0);
                     std::string stopName = stopNode.value("name", "Unknown");
 
-                    if(stopId == originId)
+                    if(stopName == origin.getName())
                     {
                         isRecording = true;
                         continue;
                     }
 
-                    if(stopId == destId)
+                    if(stopName == dest.getName())
                     {
                         break;
                     }
 
                     if(isRecording)
                     {
-                        train->addStopover(Station(stopId, stopName));
+                        train->addStopover(Station(stopName));
                     }
                 }
             }

@@ -20,14 +20,14 @@ Trips FakeTripParser::parse()
 {
     Trips result;
 
-    Station freiburg(1, "Freiburg (Breisgau) Hbf");
-    Station offenburg(2, "Offenburg");
-    Station karlsruhe(3, "Karlsruhe Hbf");
-    Station mannheim(4, "Mannheim Hbf");
-    Station denzlingen(5, "Denzlingen");
-    Station emmendingen(6, "Emmendingen");
-    Station bertoldsbrunnen(7, "Bertoldsbrunnen");
-    Station stadttheater(8, "Stadttheater");
+    Station freiburg("Freiburg (Breisgau) Hbf");
+    Station offenburg("Offenburg");
+    Station karlsruhe("Karlsruhe Hbf");
+    Station mannheim("Mannheim Hbf");
+    Station denzlingen("Denzlingen");
+    Station emmendingen("Emmendingen");
+    Station bertoldsbrunnen("Bertoldsbrunnen");
+    Station stadttheater("Stadttheater");
 
     Operator dbFern(10, "DB Fernverkehr AG");
     Operator dbRegio(11, "DB Regio Baden-Wuerttemberg");
