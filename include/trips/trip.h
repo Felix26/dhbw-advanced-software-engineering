@@ -8,11 +8,12 @@
 #include "station.h"
 #include "valueObjects/duration.h"
 #include "valueObjects/distance.h"
+#include "valueObjects/transportType.h"
 
 class Trip
 {
     public:
-        Trip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::chrono::system_clock::time_point startTime);
+        Trip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::chrono::system_clock::time_point startTime, const TransportType &transportType);
         virtual ~Trip() = default;
 
         int getId() const;
@@ -23,7 +24,7 @@ class Trip
         std::chrono::system_clock::time_point getStartTime() const;
 
         virtual std::string getTransportName() const = 0;
-        virtual std::string getTransportType() const = 0;
+        TransportType getTransportType() const;
 
     protected:
         int mId;
@@ -32,6 +33,7 @@ class Trip
         Distance mDistance;
         Duration mDuration;
         std::chrono::system_clock::time_point mStartTime;
+        TransportType mTransportType;
 };
 
 using Trips = std::vector<std::shared_ptr<Trip>>;

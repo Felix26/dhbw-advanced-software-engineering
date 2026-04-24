@@ -4,15 +4,12 @@
 #include <iostream>
 #include <chrono>
 
-#include "trips/fernverkehr_traintrip.h"
-#include "trips/regionalverkehr_traintrip.h"
-#include "trips/s-bahn_traintrip.h"
-#include "trips/u-bahn_traintrip.h"
-#include "trips/tram_traintrip.h"
+#include "trips/traintrip.h"
 #include "trips/bustrip.h"
 #include "station.h"
 #include "json.hpp"
 #include "operator.h"
+#include "valueObjects/transportType.h"
 
 using json = nlohmann::json;
 
@@ -111,23 +108,23 @@ Trips TripParser::parse()
             std::shared_ptr<TrainTrip> train;
             if(category == "express" || category == "regionalExp" || (category == "nationalExpress" && lineName.find("IC") != std::string::npos)) // "regionalExp" is used for FlixTrains, "nationalExpress" is used for ICEs
             {
-                train = std::make_shared<FernverkehrTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
+                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::Fernverkehr, lineName, op);
             }
             else if(category == "regional" || category == "nationalExpress") // "nationalExpress" is used for french regional trains
             {
-                train = std::make_shared<RegionalverkehrTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
+                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::Regionalverkehr, lineName, op);
             }
             else if(category == "suburban")
             {
-                train = std::make_shared<SBahnTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
+                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::SBahn, lineName, op);
             }
             else if(category == "tram")
             {
-                train = std::make_shared<TramTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
+                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::Tram, lineName, op);
             }
             else if(category == "subway")
             {
-                train = std::make_shared<UBahnTrainTrip>(statusId, origin, dest, distance, duration, startTime, lineName, op);
+                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::UBahn, lineName, op);
             }
             else
             {

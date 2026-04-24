@@ -3,11 +3,12 @@
 #include <functional>
 
 #include "trips/trip.h"
+#include "valueObjects/transportType.h"
 
 class TripGrouper
 {
     public:
-        static std::function<std::string(const Trip&)> byTransportType();
+        static std::function<TransportType(const Trip&)> byTransportType();
         static std::function<Station(const Trip&)> byOrigin();
         static std::function<Station(const Trip&)> byDestination();
         

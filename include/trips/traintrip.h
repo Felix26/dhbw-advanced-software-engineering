@@ -10,7 +10,7 @@
 class TrainTrip : public Trip
 {
     public:
-        TrainTrip(int id, const Station& origin, const Station& destination, int distanceKm, int duration, const std::chrono::system_clock::time_point startTime, const std::string& lineName, const Operator& op);
+        TrainTrip(int id, const Station& origin, const Station& destination, int distanceKm, int duration, const std::chrono::system_clock::time_point startTime, const TransportType& transportType, const std::string& lineName, const Operator& op);
         ~TrainTrip() override = default;
 
         std::string getLineName() const;
@@ -22,7 +22,6 @@ class TrainTrip : public Trip
         int getStopoverCount() const;
 
         std::string getTransportName() const override;
-        virtual std::string getTransportType() const override = 0;
 
     protected:
         std::string mLineName;

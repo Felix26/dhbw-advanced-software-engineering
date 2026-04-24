@@ -1,6 +1,6 @@
 #include "trips/traintrip.h"
 
-TrainTrip::TrainTrip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::chrono::system_clock::time_point startTime, const std::string& lineName, const Operator& op) : Trip(id, origin, destination, distance, duration, startTime), mLineName(lineName), mOperator(op)
+TrainTrip::TrainTrip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::chrono::system_clock::time_point startTime, const TransportType& transportType, const std::string& lineName, const Operator& op) : Trip(id, origin, destination, distance, duration, startTime, transportType), mLineName(lineName), mOperator(op)
 {
 
 }
@@ -32,5 +32,5 @@ int TrainTrip::getStopoverCount() const
 }
 std::string TrainTrip::getTransportName() const
 {
-    return getTransportType() + " (" + mLineName + ")";
+    return getTransportType().toString() + " (" + mLineName + ")";
 }
