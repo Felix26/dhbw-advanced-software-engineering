@@ -24,4 +24,20 @@ class UniversalGrouper
             }
             return buckets;
         }
+
+        template<typename KeyType>
+        static TripBuckets<KeyType> groupTrips(const Trips& trips, const std::function<std::vector<KeyType>(const Trip&)>& keysExtractor)
+        {
+            TripBuckets<KeyType> buckets;
+            for (const auto& trip : trips)
+            {
+                std::vector<KeyType> keys = keysExtractor(*trip);
+                
+                for (const auto& key : keys)
+                {
+                    buckets[key].push_back(trip);
+                }
+            }
+            return buckets;
+        }
 };
