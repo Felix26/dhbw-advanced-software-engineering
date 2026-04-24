@@ -6,6 +6,8 @@
 #include <chrono>
 
 #include "station.h"
+#include "valueObjects/duration.h"
+#include "valueObjects/distance.h"
 
 class Trip
 {
@@ -16,8 +18,8 @@ class Trip
         int getId() const;
         Station getOrigin() const;
         Station getDestination() const;
-        int getDistance() const;
-        int getDuration() const;
+        Distance getDistance() const;
+        Duration getDuration() const;
         std::chrono::system_clock::time_point getStartTime() const;
 
         virtual std::string getTransportName() const = 0;
@@ -27,8 +29,8 @@ class Trip
         int mId;
         Station mOrigin;
         Station mDestination;
-        int mDistance; // m
-        int mDuration; // min
+        Distance mDistance;
+        Duration mDuration;
         std::chrono::system_clock::time_point mStartTime;
 };
 

@@ -12,7 +12,7 @@ int main()
     DistanceAggregator distanceAggregator;
     auto result = distanceAggregator.aggregate(trips);
 
-    assert(result.aggregationValue == 276600); // Gesamtdistanz der Trips in Metern
+    assert(result.aggregationValue == Distance::fromMeters(276600)); // Gesamtdistanz der Trips in Metern
     assert(result.aggregationCount == 5); // Anzahl der Trips
     return 0;
 }

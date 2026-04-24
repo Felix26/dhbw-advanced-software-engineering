@@ -9,6 +9,8 @@ class Speed
 
         friend std::ostream& operator<<(std::ostream& os, const Speed& speed);
 
+        double getSpeedInKmH() const;
+
     private:
         Speed(double speed);
         friend class Distance; 

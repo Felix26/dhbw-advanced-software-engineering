@@ -13,7 +13,7 @@ int main()
     SpeedAggregator speedAggregator;
     auto result = speedAggregator.aggregate(trips);
 
-    assert(result.aggregationValue > 107.76 && result.aggregationValue < 107.77);
+    assert(result.aggregationValue.getSpeedInKmH() > 107.76 && result.aggregationValue.getSpeedInKmH() < 107.77);
     assert(result.aggregationCount == 5);
     return 0;
 }

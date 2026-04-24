@@ -1,6 +1,6 @@
 #include "trips/trip.h"
 
-Trip::Trip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::chrono::system_clock::time_point startTime) : mId(id), mOrigin(origin), mDestination(destination), mDistance(distance), mDuration(duration), mStartTime(startTime)
+Trip::Trip(int id, const Station& origin, const Station& destination, int distance, int duration, const std::chrono::system_clock::time_point startTime) : mId(id), mOrigin(origin), mDestination(destination), mDistance(Distance::fromMeters(distance)), mDuration(Duration::fromMinutes(duration)), mStartTime(startTime)
 {
 
 }
@@ -20,12 +20,12 @@ Station Trip::getDestination() const
     return mDestination;
 }
 
-int Trip::getDistance() const
+Distance Trip::getDistance() const
 {
     return mDistance;
 }
 
-int Trip::getDuration() const
+Duration Trip::getDuration() const
 {
     return mDuration;
 }

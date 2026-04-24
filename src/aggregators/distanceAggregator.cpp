@@ -1,11 +1,13 @@
 #include "aggregators/distanceAggregator.h"
 
-AggregatorResult<int> DistanceAggregator::aggregate(const Trips& trips) const
+#include "valueObjects/distance.h"
+
+AggregatorResult<Distance> DistanceAggregator::aggregate(const Trips& trips) const
 {
-    int totalDistance = 0;
+    Distance totalDistance = Distance::fromMeters(0);
     for (const auto& trip : trips)
     {
         totalDistance += trip->getDistance();
     }
-    return {totalDistance, static_cast<int>(trips.size())};
+    return {Distance(totalDistance), static_cast<int>(trips.size())};
 }

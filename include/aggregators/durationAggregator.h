@@ -2,8 +2,10 @@
 
 #include "aggregators/iaggregator.h"
 
-class DurationAggregator : public IAggregator<int>
+#include "valueObjects/duration.h"
+
+class DurationAggregator : public IAggregator<Duration>
 {
     public:
-        AggregatorResult<int> aggregate(const Trips& trips) const override;
+        AggregatorResult<Duration> aggregate(const Trips& trips) const override;
 };

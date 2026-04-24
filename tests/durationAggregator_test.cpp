@@ -12,7 +12,7 @@ int main()
     DurationAggregator durationAggregator;
     auto result = durationAggregator.aggregate(trips);
 
-    assert(result.aggregationValue == 154); // Gesamtdauer der Trips in Minuten
+    assert(result.aggregationValue == Duration::fromMinutes(154)); // Gesamtdauer der Trips in Minuten
     assert(result.aggregationCount == 5); // Anzahl der Trips
     return 0;
 }

@@ -1,8 +1,10 @@
 #include "aggregators/durationAggregator.h"
 
-AggregatorResult<int> DurationAggregator::aggregate(const Trips& trips) const
+#include "valueObjects/duration.h"
+
+AggregatorResult<Duration> DurationAggregator::aggregate(const Trips& trips) const
 {
-    int totalDuration = 0;
+    Duration totalDuration = Duration::fromMinutes(0);
     for (const auto& trip : trips)
     {
         totalDuration += trip->getDuration();
