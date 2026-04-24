@@ -12,6 +12,11 @@ int Duration::getDurationInMinutes() const
     return mDuration.count();
 }
 
+int Duration::getDurationInSeconds() const
+{
+    return std::chrono::duration_cast<std::chrono::seconds>(mDuration).count();
+}
+
 
 Duration Duration::operator+(const Duration &other) const
 {

@@ -19,6 +19,8 @@ class Distance
         Distance operator/(double divisor) const;
         Distance &operator/=(double divisor);
 
+        auto operator<=>(const Distance& other) const = default;
+
         friend std::ostream& operator<<(std::ostream& os, const Distance& distance);
         
 
