@@ -11,6 +11,7 @@ class Speed
 
     private:
         Speed(double speed);
+        friend class Distance; 
 
         double mSpeed; // Speed in meters per second
 };

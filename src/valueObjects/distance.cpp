@@ -2,6 +2,9 @@
 
 #include <iomanip>
 
+#include "valueObjects/speed.h"
+#include "valueObjects/duration.h"
+
 Distance::Distance(double distance) : mDistance(distance) {}
 
 Distance Distance::fromMeters(double meters)
@@ -57,6 +60,12 @@ Distance &Distance::operator/=(double divisor)
 {
     this->mDistance /= divisor;
     return *this;
+}
+
+Speed Distance::operator/(const Duration &duration) const
+{
+    double speedInMetersPerSecond = this->mDistance / duration.getDurationInSeconds();
+    return Speed(speedInMetersPerSecond);
 }
 
 

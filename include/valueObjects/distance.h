@@ -2,6 +2,9 @@
 
 #include <ostream>
 
+class Speed;
+class Duration;
+
 class Distance
 {
     public:
@@ -18,6 +21,8 @@ class Distance
         Distance &operator*=(double factor);
         Distance operator/(double divisor) const;
         Distance &operator/=(double divisor);
+
+        Speed operator/(const Duration &duration) const;
 
         auto operator<=>(const Distance& other) const = default;
 
