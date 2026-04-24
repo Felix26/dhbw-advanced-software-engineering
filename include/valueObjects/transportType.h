@@ -13,6 +13,10 @@ class TransportType
 
         static std::string toString(Value type);
         std::string toString() const { return toString(mType); }
+        constexpr bool isTrain() const
+        {
+            return mType == Fernverkehr || mType == Regionalverkehr || mType == SBahn || mType == UBahn || mType == Tram;
+        }
 
         friend std::ostream& operator<<(std::ostream& os, const TransportType& transportType);
         auto operator<=>(const TransportType& other) const = default;
