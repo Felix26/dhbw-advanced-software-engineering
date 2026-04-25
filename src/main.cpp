@@ -10,7 +10,7 @@
 
 #include "printers/statisticPrinter.h"
 #include "statistic.h"
-#include "aggregators/distanceAggregator.h"
+#include "aggregators/countAggregator.h"
 
 #include "groupers/tripGroupers.h"
 
@@ -29,7 +29,7 @@ int main()
 
     Trips trips = tripParser->parse();
 
-    Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byMonth()), DistanceAggregator());
+    Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byTransportType()), CountAggregator());
 
     std::cout << Printers::PrettyWrapper(statistic) << std::endl;
     //std::cout << statistic << std::endl;

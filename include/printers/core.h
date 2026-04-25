@@ -20,6 +20,19 @@ namespace Printers
     }
 
     template <typename ValueType>
+    inline double calculateRatio(const ValueType &value, const ValueType &maxValue)
+    {
+        if constexpr (std::is_arithmetic_v<ValueType>)
+        {
+            return static_cast<double>(value) / static_cast<double>(maxValue);
+        }
+        else
+        {
+            return value / maxValue;
+        }
+    }
+
+    template <typename ValueType>
     inline std::string createBar(ValueType value, ValueType maxValue, size_t maxBarLength = 20)
     {
         const std::string fullBlock = "\xE2\x96\x88"; // Unicode character for a full block
@@ -28,7 +41,7 @@ namespace Printers
         const std::string invertOn = "\033[7m"; // ANSI escape code to invert colors
         const std::string invertOff = "\033[0m";  // ANSI escape code to reset formatting
 
-        double ratio = value / maxValue;
+        double ratio = calculateRatio(value, maxValue);
         ratio = std::clamp(ratio, 0.0, 1.0);
 
         double barLength = ratio * maxBarLength;
