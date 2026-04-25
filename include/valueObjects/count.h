@@ -20,6 +20,8 @@ class Count
         double operator/(const Count& other) const;
 
         friend std::ostream& operator<<(std::ostream& os, const Count& count);
+
+        static std::string getValueTypeName();
         
     private:
         size_t mCount;

@@ -41,6 +41,11 @@ double Count::operator/(const Count &other) const
     return static_cast<double>(this->mCount) / other.mCount;
 }
 
+std::string Count::getValueTypeName()
+{
+    return "Anzahl";
+}
+
 std::ostream &operator<<(std::ostream &os, const Count &count)
 {
     os << count.mCount << "x";

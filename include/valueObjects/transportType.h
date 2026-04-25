@@ -21,7 +21,7 @@ class TransportType
         friend std::ostream& operator<<(std::ostream& os, const TransportType& transportType);
         auto operator<=>(const TransportType& other) const = default;
 
-        
+        static std::string getKeyTypeName();
     private:
         Value mType;
 };

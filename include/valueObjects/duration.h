@@ -27,6 +27,7 @@ class Duration
 
         friend std::ostream& operator<<(std::ostream& os, const Duration& duration);
 
+        static std::string getValueTypeName();
     private:
         Duration(std::chrono::minutes duration);
 

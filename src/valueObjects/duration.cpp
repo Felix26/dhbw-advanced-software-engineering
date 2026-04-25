@@ -67,6 +67,11 @@ double Duration::operator/(const Duration &other) const
     return static_cast<double>(this->getDurationInSeconds()) / other.getDurationInSeconds();
 }
 
+std::string Duration::getValueTypeName()
+{
+    return "Dauer";
+}
+
 std::ostream &operator<<(std::ostream &os, const Duration &duration)
 {
     int totalMinutes = duration.getDurationInMinutes();

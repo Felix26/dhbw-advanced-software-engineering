@@ -73,6 +73,10 @@ double Distance::operator/(const Distance &other) const
     return this->mDistance / other.mDistance;
 }
 
+std::string Distance::getValueTypeName()
+{
+    return "Distanz";
+}
 
 std::ostream &operator<<(std::ostream &os, const Distance &distance)
 {

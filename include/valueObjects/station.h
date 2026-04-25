@@ -15,6 +15,7 @@ class Station
 
         std::string getName() const { return mName; }
 
+        static std::string getKeyTypeName();
     private:
         std::string mName;
 };

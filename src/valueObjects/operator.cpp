@@ -14,3 +14,8 @@ bool Operator::operator==(const Operator &other) const
 {
     return this->operatorId == other.operatorId;
 }
+
+std::string Operator::getKeyTypeName()
+{
+    return "Betreiber";
+}

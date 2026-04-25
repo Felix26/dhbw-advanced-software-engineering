@@ -12,6 +12,7 @@ class Operator
 
         bool operator==(const Operator& other) const;
 
+        static std::string getKeyTypeName();
     private:
         int operatorId;
         std::string mName;

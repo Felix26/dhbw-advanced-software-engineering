@@ -14,6 +14,11 @@ std::string TransportType::toString(Value type)
     }
 }
 
+std::string TransportType::getKeyTypeName()
+{
+    return "Verkehrsmittel";
+}
+
 std::ostream& operator<<(std::ostream& os, const TransportType& transportType)
 {
     os << TransportType::toString(transportType.mType);

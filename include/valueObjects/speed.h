@@ -13,6 +13,7 @@ class Speed
 
         double getSpeedInKmH() const;
 
+        static std::string getValueTypeName();
     private:
         Speed(double speed);
         friend class Distance; 

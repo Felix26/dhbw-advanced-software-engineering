@@ -30,7 +30,7 @@ class Distance
 
         friend std::ostream& operator<<(std::ostream& os, const Distance& distance);
         
-
+        static std::string getValueTypeName();
     private:
         Distance(double distance);
 

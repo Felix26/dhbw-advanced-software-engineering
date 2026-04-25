@@ -19,3 +19,8 @@ double Speed::getSpeedInKmH() const
 {
     return mSpeed * 3.6; // Convert m/s to km/h
 }
+
+std::string Speed::getValueTypeName()
+{
+    return "Geschwindigkeit";
+}
