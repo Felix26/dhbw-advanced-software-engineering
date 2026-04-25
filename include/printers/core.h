@@ -38,9 +38,6 @@ namespace Printers
         const std::string fullBlock = "\xE2\x96\x88"; // Unicode character for a full block
         const std::string halfBlock = "\xE2\x96\x8C"; // Unicode character for a half block
 
-        const std::string invertOn = "\033[7m"; // ANSI escape code to invert colors
-        const std::string invertOff = "\033[0m";  // ANSI escape code to reset formatting
-
         double ratio = calculateRatio(value, maxValue);
         ratio = std::clamp(ratio, 0.0, 1.0);
 
