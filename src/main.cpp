@@ -7,11 +7,7 @@
 #include "trips/trip.h"
 #include "trips/traintrip.h"
 
-#include "printers/statisticPrinter.h"
-#include "statistic.h"
-#include "aggregators/countAggregator.h"
-
-#include "groupers/tripGroupers.h"
+#include "tripWizard.h"
 
 #ifdef _WIN32
     #include <windows.h>
@@ -28,12 +24,14 @@ int main()
 
     Trips trips = tripParser->parse();
 
-    Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byVisitedStations()), CountAggregator());
+    // Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byVisitedStations()), CountAggregator());
 
-    statistic.sortByValue();
+    // statistic.sortByValue();
 
-    std::cout << Printers::PrettyWrapper(statistic) << std::endl;
-    //std::cout << statistic << std::endl;
+    // std::cout << Printers::PrettyWrapper(statistic) << std::endl;
+    // //std::cout << statistic << std::endl;
+
+    TripWizard{}.run(trips);
     
 
     return 0;

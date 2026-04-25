@@ -11,12 +11,32 @@ namespace Printers
     struct PrettyWrapper
     {
         const T &value;
+        bool useAverage = false;
     };
 
     template <typename T>
-    inline PrettyWrapper<T> pretty(const T &value)
+    inline PrettyWrapper<T> pretty(const T &value, bool useAverage = false)
     {
-        return PrettyWrapper<T>{value};
+        return PrettyWrapper<T>{value, useAverage};
+    }
+
+    template <typename ValueType>
+    constexpr bool existsAverage(const AggregatorResult<ValueType> &result)
+    {
+        auto average = result.getAverage();
+        if(average) return true;
+        return false;
+    }
+
+    template <typename ValueType>
+    inline ValueType getAggregationValue(const AggregatorResult<ValueType> &result, bool useAverage)
+    {
+        auto average = result.getAverage();
+        if(average)
+        {
+            return *average;
+        }
+        return result.aggregationValue;
     }
 
     template <typename ValueType>

@@ -22,12 +22,22 @@ namespace Printers
             os << "No data to display." << std::endl;
             return os;
         }
+        bool useAverage = wrapper.useAverage;
+        if(useAverage)
+        {
+            useAverage = existsAverage(stats.getData().front().second);
+        }
 
         std::string keyHeader = getSafeKeyHeader<KeyType>();
         std::string valueHeader = getSafeValueHeader<ValueType>();
 
+        if(useAverage)
+        {
+            valueHeader = "\xC3\x98 " + valueHeader;
+        }
+
         size_t maxKeyLength = keyHeader.length();
-        ValueType maxValue = stats.getData().front().second.aggregationValue;
+        ValueType maxValue = getAggregationValue(stats.getData().front().second, useAverage);
 
         for (const auto& [key, value] : stats.getData())
         {
@@ -35,7 +45,7 @@ namespace Printers
 
             maxKeyLength = std::min(std::max(maxKeyLength, keyString.length()), maxAllowedKeyLength);
 
-            maxValue = std::max(maxValue, value.aggregationValue);
+            maxValue = std::max(maxValue, getAggregationValue(value, useAverage));
         }
 
         size_t maxValueLength = std::max(getValueString(maxValue).length(), valueHeader.length());
@@ -65,9 +75,9 @@ namespace Printers
             }
 
             std::string keyString = getKeyString(key, maxKeyLength);
-            std::string valueString = getValueString(value.aggregationValue);
+            std::string valueString = getValueString(getAggregationValue(value, useAverage));
 
-            std::string bar = createBar(value.aggregationValue, maxValue, availableBarLength);
+            std::string bar = createBar(getAggregationValue(value, useAverage), maxValue, availableBarLength);
 
             os << std::format("{:<{}} | {:>{}} | {}", keyString, maxKeyLength, valueString, maxValueLength, bar) << std::endl;
             lineCount++;

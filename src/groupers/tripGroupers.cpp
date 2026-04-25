@@ -75,3 +75,11 @@ std::function<std::string(const Trip &)> TripGrouper::byMonth()
         return std::format("{}/{:02d}", static_cast<int>(year), static_cast<unsigned>(month));
     };
 }
+
+std::function<std::string(const Trip&)> TripGrouper::byNone()
+{
+    return [](const Trip& trip)
+    {
+        return "Total";
+    };
+}

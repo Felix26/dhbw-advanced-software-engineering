@@ -5,12 +5,14 @@
 #include "trips/trip.h"
 #include "valueObjects/transportType.h"
 
+using TripFilterFunction = std::function<bool(const Trip&)>;
+
 class Filter
 {
     public:
-        static std::function<bool(const Trip&)> filterByTransportType(const TransportType transportType);
-        static std::function<bool(const Trip&)> filterByYear(int year);
+        static TripFilterFunction filterByTransportType(const TransportType transportType);
+        static TripFilterFunction filterByYear(int year);
 
-        static std::function<bool(const Trip&)> onlyTrainTrips();
+        static TripFilterFunction onlyTrainTrips();
         
 };

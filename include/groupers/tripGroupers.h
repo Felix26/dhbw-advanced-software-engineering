@@ -15,4 +15,6 @@ class TripGrouper
         
         static std::function<std::vector<Station>(const Trip&)> byVisitedStations();
         static std::function<std::vector<Station>(const Trip&)> byPassedStops();
+
+        static std::function<std::string(const Trip&)> byNone();
 };
