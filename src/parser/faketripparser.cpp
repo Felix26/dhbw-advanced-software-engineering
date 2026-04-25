@@ -3,8 +3,8 @@
 #include "parser/faketripparser.h"
 #include "trips/bustrip.h"
 #include "trips/traintrip.h"
-#include "station.h"
-#include "operator.h"
+#include "valueObjects/station.h"
+#include "valueObjects/operator.h"
 #include "valueObjects/transportType.h"
 
 auto mockTime(int y, int m, int d, int h, int min)

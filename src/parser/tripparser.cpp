@@ -6,9 +6,9 @@
 
 #include "trips/traintrip.h"
 #include "trips/bustrip.h"
-#include "station.h"
+#include "valueObjects/station.h"
 #include "json.hpp"
-#include "operator.h"
+#include "valueObjects/operator.h"
 #include "valueObjects/transportType.h"
 
 using json = nlohmann::json;

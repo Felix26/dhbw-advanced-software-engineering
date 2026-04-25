@@ -5,7 +5,7 @@
 #include <memory>
 #include <chrono>
 
-#include "station.h"
+#include "valueObjects/station.h"
 #include "valueObjects/duration.h"
 #include "valueObjects/distance.h"
 #include "valueObjects/transportType.h"

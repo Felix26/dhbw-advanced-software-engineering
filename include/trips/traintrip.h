@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-#include "operator.h"
+#include "valueObjects/operator.h"
 
 class TrainTrip : public Trip
 {

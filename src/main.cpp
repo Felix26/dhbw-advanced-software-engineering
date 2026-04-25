@@ -6,7 +6,6 @@
 #include "parser/parserFactory.h"
 #include "trips/trip.h"
 #include "trips/traintrip.h"
-#include "station.h"
 
 #include "printers/statisticPrinter.h"
 #include "statistic.h"
