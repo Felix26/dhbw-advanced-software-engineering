@@ -28,7 +28,9 @@ int main()
 
     Trips trips = tripParser->parse();
 
-    Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byTransportType()), CountAggregator());
+    Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byVisitedStations()), CountAggregator());
+
+    statistic.sortByValue();
 
     std::cout << Printers::PrettyWrapper(statistic) << std::endl;
     //std::cout << statistic << std::endl;

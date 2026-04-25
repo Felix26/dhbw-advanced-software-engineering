@@ -32,7 +32,7 @@ class Statistic
             });
         }
 
-        void sortByValue(bool ascending = true)
+        void sortByValue(bool ascending = false)
         {
             std::sort(data.begin(), data.end(), [ascending](const auto &a, const auto &b)
             {

@@ -35,8 +35,8 @@ namespace Printers
     template <typename ValueType>
     inline std::string createBar(ValueType value, ValueType maxValue, size_t maxBarLength = 20)
     {
-        const std::string fullBlock = "\xE2\x96\x88"; // Unicode character for a full block
-        const std::string halfBlock = "\xE2\x96\x8C"; // Unicode character for a half block
+        const std::string fullBlock = "\xE2\x94\x81"; // Unicode character for a full block
+        const std::string halfBlock = "\xE2\x95\xB8"; // Unicode character for a half block
 
         double ratio = calculateRatio(value, maxValue);
         ratio = std::clamp(ratio, 0.0, 1.0);
@@ -90,5 +90,43 @@ namespace Printers
             keyStr = keyStr.substr(0, maxLength - 3) + "...";
         }
         return keyStr;
+    }
+
+    template <typename ValueType>
+    concept HasValueName = requires
+    {
+        { ValueType::getValueTypeName() } -> std::convertible_to<std::string>;
+    };
+
+    template <typename KeyType>
+    concept HasKeyName = requires
+    {
+        { KeyType::getKeyTypeName() } -> std::convertible_to<std::string>;
+    };
+
+    template <typename ValueType>
+    std::string getSafeValueHeader()
+    {
+        if constexpr (HasValueName<ValueType>)
+        {
+            return ValueType::getValueTypeName();
+        }
+        else
+        {
+            return "Wert";
+        }
+    }
+
+    template <typename KeyType>
+    std::string getSafeKeyHeader()
+    {
+        if constexpr (HasKeyName<KeyType>)
+        {
+            return KeyType::getKeyTypeName();
+        }
+        else
+        {
+            return "Kategorie";
+        }
     }
 }
