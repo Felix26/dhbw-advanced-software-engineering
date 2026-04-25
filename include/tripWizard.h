@@ -8,7 +8,6 @@
 #include "trips/trip.h"
 
 #include "valueObjects/allValueObjectHeaders.h"
-#include "utility.h"
 
 #include "groupers/universalGrouper.h"
 
