@@ -13,8 +13,8 @@ class Statistic
         {
             for(const auto& [key, trips] : buckets)
             {
-                ValueType aggregatedValue = aggregator.aggregate(trips).aggregationValue;
-                data.emplace_back(key, aggregatedValue);
+                auto aggregatorResult = aggregator.aggregate(trips);
+                data.emplace_back(key, aggregatorResult);
             }
         }
 
@@ -30,7 +30,7 @@ class Statistic
         {
             std::sort(data.begin(), data.end(), [ascending](const auto &a, const auto &b)
             {
-                return ascending ? a.second < b.second : a.second > b.second;
+                return ascending ? a.second.aggregationValue < b.second.aggregationValue : a.second.aggregationValue > b.second.aggregationValue;
             });
         }
 
@@ -38,11 +38,19 @@ class Statistic
         {
             for(const auto& [key, value] : statistic.data)
             {
-                os << key << ": " << value << std::endl;
+                auto average = value.getAverage();
+                if(average)
+                {
+                    os << key << ": " << value.aggregationValue << " (Average: " << *average << ")" << std::endl;
+                }
+                else
+                {
+                    os << key << ": " << value.aggregationValue << std::endl;
+                }
             }
             return os;
         }
          
     private:
-        std::vector<std::pair<KeyType, ValueType>> data;
+        std::vector<std::pair<KeyType, AggregatorResult<ValueType>>> data;
 };

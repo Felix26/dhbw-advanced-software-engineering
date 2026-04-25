@@ -24,5 +24,5 @@ AggregatorResult<Speed> SpeedAggregator::aggregate(const Trips &trips) const
 
     // Calculate speed as distance divided by duration
     Speed speed = distanceResult.aggregationValue / durationResult.aggregationValue;
-    return {speed, distanceResult.aggregationCount};
+    return {speed, std::nullopt}; // Return speed with no count, as it's not meaningful for average speed
 }

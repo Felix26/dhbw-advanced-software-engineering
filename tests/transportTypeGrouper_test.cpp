@@ -4,7 +4,7 @@
 #include "groupers/universalGrouper.h"
 #include "groupers/tripGroupers.h"
 #include "aggregators/distanceAggregator.h"
-#include "aggregators/speedAggregator.h"
+#include "aggregators/countAggregator.h"
 #include "parser/parserFactory.h"
 #include "trips/trip.h"
 #include "statistic.h"
@@ -15,14 +15,14 @@ int main()
     auto data = ParserFactory::createParserFromFolder("C:\\Users\\Felix\\Nextcloud\\Advanced SWE")->parse();
 
     auto groupedByTransportType = UniversalGrouper::groupTrips(data, TripGrouper::byTransportType());
+    auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byVisitedStations());
     
-    auto statisticByTransportType = Statistic(groupedByTransportType, SpeedAggregator());
+    auto statisticByTransportType = Statistic(groupedByVisitedStations, CountAggregator());
     
     std::cout << "Statistic by Transport Type:" << std::endl;
     statisticByTransportType.sortByValue(false);
     std::cout << statisticByTransportType << std::endl;
     
-    auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byVisitedStations());
     /*for (const auto& [transportType, trips] : groupedByTransportType)
     {
         std::cout << "Transport Type: " << transportType << ", Count: " << DistanceAggregator().aggregate(trips).aggregationValue << std::endl;

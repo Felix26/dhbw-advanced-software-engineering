@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <optional>
 
 #include "trips/trip.h"
 
@@ -9,7 +10,19 @@ template<typename T>
 struct AggregatorResult
 {
     T aggregationValue;
-    int aggregationCount;
+    std::optional<size_t> aggregationCount;
+
+    std::optional<T> getAverage() const
+    {
+        if constexpr (requires(T t, int i) { t / i; })
+        {
+            if(aggregationCount && *aggregationCount > 0)
+            {
+                return aggregationValue / *aggregationCount;
+            }
+        }
+        return std::nullopt;
+    }
 };
 
 template<typename T>
