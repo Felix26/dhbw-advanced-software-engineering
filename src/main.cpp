@@ -8,7 +8,11 @@
 #include "trips/traintrip.h"
 #include "station.h"
 
-#include "printers/tripPrinter.h"
+#include "printers/statisticPrinter.h"
+#include "statistic.h"
+#include "aggregators/distanceAggregator.h"
+
+#include "groupers/tripGroupers.h"
 
 #ifdef _WIN32
     #include <windows.h>
@@ -25,7 +29,10 @@ int main()
 
     Trips trips = tripParser->parse();
 
-    std::cout << Printers::PrettyWrapper(trips) << std::endl;
+    Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byMonth()), DistanceAggregator());
+
+    std::cout << Printers::PrettyWrapper(statistic) << std::endl;
+    //std::cout << statistic << std::endl;
     
 
     return 0;

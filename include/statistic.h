@@ -56,6 +56,8 @@ class Statistic
             }
             return os;
         }
+
+        const auto getData() const { return data; }
          
     private:
         std::vector<std::pair<KeyType, AggregatorResult<ValueType>>> data;
