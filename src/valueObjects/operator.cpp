@@ -1,4 +1,4 @@
-#include "operator.h"
+#include "valueObjects/operator.h"
 
 Operator::Operator(int id, const std::string &name) : operatorId(id), mName(name)
 {

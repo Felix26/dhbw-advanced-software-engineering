@@ -1,4 +1,4 @@
-#include "station.h"
+#include "valueObjects/station.h"
 
 bool Station::operator==(const Station &other) const
 {
