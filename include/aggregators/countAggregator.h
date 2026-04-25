@@ -1,9 +1,10 @@
 #pragma once
 
 #include "aggregators/iaggregator.h"
+#include "valueObjects/count.h"
 
-class CountAggregator : public IAggregator<int>
+class CountAggregator : public IAggregator<Count>
 {
     public:
-        AggregatorResult<int> aggregate(const Trips& trips) const override;
+        AggregatorResult<Count> aggregate(const Trips& trips) const override;
 };
