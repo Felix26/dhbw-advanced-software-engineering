@@ -8,16 +8,20 @@
 #include "parser/parserFactory.h"
 #include "trips/trip.h"
 #include "statistic.h"
+#include "filters/universalFilter.h"
+#include "filters/filter.h"
 
 
 int main()
 {
     auto data = ParserFactory::createParserFromFolder("C:\\Users\\Felix\\Nextcloud\\Advanced SWE")->parse();
 
+    UniversalFilter::filterTrips(data, Filter::onlyTrainTrips());
+
     auto groupedByTransportType = UniversalGrouper::groupTrips(data, TripGrouper::byTransportType());
     auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byVisitedStations());
     
-    auto statisticByTransportType = Statistic(groupedByVisitedStations, CountAggregator());
+    auto statisticByTransportType = Statistic(groupedByVisitedStations, DistanceAggregator());
     
     std::cout << "Statistic by Transport Type:" << std::endl;
     statisticByTransportType.sortByValue(false);

@@ -8,9 +8,9 @@
 class Filter
 {
     public:
-        static std::function<bool(const Trip&)> filterByTransportType(Trips &trips, const TransportType transportType);
-        static std::function<bool(const Trip&)> filterByYear(Trips &trips, int year);
+        static std::function<bool(const Trip&)> filterByTransportType(const TransportType transportType);
+        static std::function<bool(const Trip&)> filterByYear(int year);
 
-        static std::function<bool(const Trip&)> onlyTrainTrips(Trips &trips);
+        static std::function<bool(const Trip&)> onlyTrainTrips();
         
 };

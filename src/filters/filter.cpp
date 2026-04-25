@@ -5,7 +5,7 @@
 #include "trips/trip.h"
 #include "valueObjects/transportType.h"
 
-std::function<bool(const Trip&)> Filter::filterByTransportType(Trips &trips, const TransportType transportType)
+std::function<bool(const Trip&)> Filter::filterByTransportType(const TransportType transportType)
 {
     return [transportType](const Trip& trip)
     {
@@ -13,7 +13,7 @@ std::function<bool(const Trip&)> Filter::filterByTransportType(Trips &trips, con
     };
 }
 
-std::function<bool(const Trip&)> Filter::filterByYear(Trips &trips, int year)
+std::function<bool(const Trip&)> Filter::filterByYear(int year)
 {
     return [year](const Trip& trip)
     {
@@ -23,7 +23,7 @@ std::function<bool(const Trip&)> Filter::filterByYear(Trips &trips, int year)
     };
 }
 
-std::function<bool(const Trip &)> Filter::onlyTrainTrips(Trips &trips)
+std::function<bool(const Trip &)> Filter::onlyTrainTrips()
 {
     return [](const Trip& trip)
     {

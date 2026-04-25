@@ -7,5 +7,6 @@
 
 class UniversalFilter
 {
-    static void filterTrips(Trips &trips, const std::function<bool(const Trip&)>& filterFunc);
+    public:
+        static void filterTrips(Trips &trips, const std::function<bool(const Trip&)>& filterFunc);
 };
