@@ -20,11 +20,13 @@ int main()
 
     auto groupedByTransportType = UniversalGrouper::groupTrips(data, TripGrouper::byTransportType());
     auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byVisitedStations());
+    auto groupedByMonth = UniversalGrouper::groupTrips(data, TripGrouper::byMonth());
     
-    auto statisticByTransportType = Statistic(groupedByVisitedStations, DistanceAggregator());
+    //auto statisticByTransportType = Statistic(groupedByMonth, DistanceAggregator());
+    auto statisticByTransportType = Statistic(data, DistanceAggregator());
     
     std::cout << "Statistic by Transport Type:" << std::endl;
-    statisticByTransportType.sortByValue(false);
+    statisticByTransportType.sortByKey();
     std::cout << statisticByTransportType << std::endl;
     
     /*for (const auto& [transportType, trips] : groupedByTransportType)

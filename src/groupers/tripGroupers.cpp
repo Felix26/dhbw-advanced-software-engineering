@@ -64,3 +64,14 @@ std::function<std::vector<Station>(const Trip &)> TripGrouper::byPassedStops()
         return stops;
     };
 }
+
+std::function<std::string(const Trip &)> TripGrouper::byMonth()
+{
+    return [](const Trip& trip)
+    {
+        auto startTime = trip.getStartTime();
+        auto month = std::chrono::year_month_day(std::chrono::floor<std::chrono::days>(startTime)).month();
+        auto year = std::chrono::year_month_day(std::chrono::floor<std::chrono::days>(startTime)).year();
+        return std::format("{}/{:02d}", static_cast<int>(year), static_cast<unsigned>(month));
+    };
+}
