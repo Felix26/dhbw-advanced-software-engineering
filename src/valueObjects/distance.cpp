@@ -68,6 +68,11 @@ Speed Distance::operator/(const Duration &duration) const
     return Speed(speedInMetersPerSecond);
 }
 
+double Distance::operator/(const Distance &other) const
+{
+    return this->mDistance / other.mDistance;
+}
+
 
 std::ostream &operator<<(std::ostream &os, const Distance &distance)
 {

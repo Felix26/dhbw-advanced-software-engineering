@@ -26,6 +26,8 @@ class Distance
 
         auto operator<=>(const Distance& other) const = default;
 
+        double operator/(const Distance& other) const;
+
         friend std::ostream& operator<<(std::ostream& os, const Distance& distance);
         
 

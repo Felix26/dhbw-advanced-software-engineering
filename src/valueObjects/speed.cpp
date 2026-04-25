@@ -4,6 +4,11 @@
 
 Speed::Speed(double speed) : mSpeed(speed) {}
 
+double Speed::operator/(const Speed &other) const
+{
+    return this->mSpeed / other.mSpeed;
+}
+
 std::ostream &operator<<(std::ostream &os, const Speed &speed)
 {
     os << std::fixed << std::setprecision(2) << speed.getSpeedInKmH() << " km/h";

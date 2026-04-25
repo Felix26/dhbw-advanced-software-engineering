@@ -23,6 +23,8 @@ class Duration
 
         auto operator<=>(const Duration& other) const = default;
 
+        double operator/(const Duration& other) const;
+
         friend std::ostream& operator<<(std::ostream& os, const Duration& duration);
 
     private:
