@@ -14,6 +14,6 @@ int main()
     auto result = speedAggregator.aggregate(trips);
 
     assert(result.aggregationValue.getSpeedInKmH() > 107.76 && result.aggregationValue.getSpeedInKmH() < 107.77);
-    assert(result.aggregationCount == 5);
+    assert(result.aggregationCount == std::nullopt);
     return 0;
 }
