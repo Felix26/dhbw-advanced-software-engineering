@@ -32,7 +32,7 @@ namespace Printers
     inline ValueType getAggregationValue(const AggregatorResult<ValueType> &result, bool useAverage)
     {
         auto average = result.getAverage();
-        if(average)
+        if(average && useAverage)
         {
             return *average;
         }

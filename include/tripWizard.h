@@ -59,14 +59,25 @@ class TripWizard
 
         WizardState mWizardState = WizardState::ConfiguringFilter;
 
-        template<typename TKey, typename TValue>
-        inline void renderStatistic(const TripBuckets<TKey>& buckets, const IAggregator<TValue> &agg)
+        template<typename KeyType, typename ValueType>
+        inline void renderStatistic(const TripBuckets<KeyType>& buckets, const IAggregator<ValueType> &agg)
         {
             // 1. Die Statistik-Klasse mit den sortierten Eimern und der Rechenlogik füttern
-            auto stats = Statistic<TKey, TValue>(buckets, agg);
+            auto stats = Statistic<KeyType, ValueType>(buckets, agg);
 
             // 2. Sortierung (Hier standardmäßig nach Key, z.B. Alphabetisch nach Station)
-            stats.sortByValue(); 
+            
+            if(mOutputType == OutputType::AsAverages)
+            {
+                if constexpr (AggregatorResult<ValueType>::supportsAverage)
+                {
+                    stats.sortByAverage();
+                }
+            }
+            else
+            {
+                stats.sortByValue();
+            }
 
             // 3. Die Ausgabe (Setzt voraus, dass der operator<< für Statistic überladen ist)
             std::cout << "\n--- Auswertung ---\n";
@@ -74,22 +85,22 @@ class TripWizard
             std::cout << "------------------\n";
         }
 
-        template<typename TKey>
-        inline void dispatchAggregation(const TripBuckets<TKey>& buckets)
+        template<typename KeyType>
+        inline void dispatchAggregation(const TripBuckets<KeyType>& buckets)
         {
             switch(mAggregationType)
             {
                 case AggregationType::ByDistance:
-                    renderStatistic<TKey, Distance>(buckets, DistanceAggregator{});
+                    renderStatistic<KeyType, Distance>(buckets, DistanceAggregator{});
                     break;
                 case AggregationType::ByDuration:
-                    renderStatistic<TKey, Duration>(buckets, DurationAggregator{});
+                    renderStatistic<KeyType, Duration>(buckets, DurationAggregator{});
                     break;
                 case AggregationType::ByCount:
-                    renderStatistic<TKey, Count>(buckets, CountAggregator{});
+                    renderStatistic<KeyType, Count>(buckets, CountAggregator{});
                     break;
                 case AggregationType::BySpeed:
-                    renderStatistic<TKey, Speed>(buckets, SpeedAggregator{});
+                    renderStatistic<KeyType, Speed>(buckets, SpeedAggregator{});
                     break;
                 default:
                     std::cout << "Diese Aggregation wird noch nicht unterstützt." << std::endl;
@@ -97,15 +108,15 @@ class TripWizard
             }
         }
 
-        template<typename TKey>
-        inline void processGrouping(const Trips& data, std::function<TKey(const Trip&)> extractor)
+        template<typename KeyType>
+        inline void processGrouping(const Trips& data, std::function<KeyType(const Trip&)> extractor)
         {
-            dispatchAggregation<TKey>(UniversalGrouper::groupTrips(data, extractor));
+            dispatchAggregation<KeyType>(UniversalGrouper::groupTrips(data, extractor));
         }
 
-        template<typename TKey>
-        inline void processGrouping(const Trips& data, std::function<std::vector<TKey>(const Trip&)> extractor)
+        template<typename KeyType>
+        inline void processGrouping(const Trips& data, std::function<std::vector<KeyType>(const Trip&)> extractor)
         {
-            dispatchAggregation<TKey>(UniversalGrouper::groupTrips(data, extractor));
+            dispatchAggregation<KeyType>(UniversalGrouper::groupTrips(data, extractor));
         }
 };

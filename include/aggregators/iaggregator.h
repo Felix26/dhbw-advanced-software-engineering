@@ -12,9 +12,11 @@ struct AggregatorResult
     T aggregationValue;
     std::optional<size_t> aggregationCount;
 
+    static constexpr bool supportsAverage = requires(T t, int i) { t / i; };
+
     std::optional<T> getAverage() const
     {
-        if constexpr (requires(T t, int i) { t / i; })
+        if constexpr (supportsAverage)
         {
             if(aggregationCount && *aggregationCount > 0)
             {

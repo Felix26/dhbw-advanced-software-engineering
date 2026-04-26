@@ -40,6 +40,14 @@ class Statistic
             });
         }
 
+        void sortByAverage(bool ascending = false) requires (AggregatorResult<ValueType>::supportsAverage)
+        {
+            std::sort(data.begin(), data.end(), [ascending](const auto &a, const auto &b)
+            {
+                return ascending ? a.second.getAverage() < b.second.getAverage() : a.second.getAverage() > b.second.getAverage();
+            });
+        }
+
         friend std::ostream& operator<<(std::ostream &os, const Statistic &statistic)
         {
             for(const auto& [key, value] : statistic.data)
