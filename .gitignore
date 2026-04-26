@@ -45,3 +45,7 @@ build/*
 .vscode/*
 
 build_*/*
+
+.clang-uml
+
+docs/*
