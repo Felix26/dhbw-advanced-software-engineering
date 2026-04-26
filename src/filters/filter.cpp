@@ -1,7 +1,7 @@
 #include "filters/filter.h"
 
 #include <chrono>
-#include "filter.h"
+#include "filters/filter.h"
 #include "trips/trip.h"
 #include "valueObjects/transportType.h"
 

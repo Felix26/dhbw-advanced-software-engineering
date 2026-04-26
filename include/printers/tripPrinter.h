@@ -5,8 +5,8 @@
 
 #include "printers/core.h"
 #include "trips/trip.h"
-#include "trips/trainTrip.h"
-#include "trips/busTrip.h"
+#include "trips/traintrip.h"
+#include "trips/bustrip.h"
 #include "valueObjects/duration.h"
 #include "valueObjects/distance.h"
 #include "valueObjects/speed.h"

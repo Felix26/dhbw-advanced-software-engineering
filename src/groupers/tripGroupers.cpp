@@ -1,6 +1,6 @@
 #include "groupers/tripGroupers.h"
 
-#include "trips/trainTrip.h"
+#include "trips/traintrip.h"
 #include "valueObjects/transportType.h"
 
 std::function<TransportType(const Trip &)> TripGrouper::byTransportType()
