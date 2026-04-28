@@ -10,7 +10,7 @@ struct ZHVData
     std::string dhid;
     std::string name;
     std::string municipality;
-    Coordinates coordinates;
+    Coordinates coordinates = Coordinates(0.0, 0.0);
 };
 
 class IStationParser

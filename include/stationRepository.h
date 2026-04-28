@@ -15,4 +15,6 @@ class StationRepository
 
     private:
         std::unordered_map<std::string, ZHVData> mZHVData;
+
+        std::string formatStationName(const ZHVData &data) const;
 };
