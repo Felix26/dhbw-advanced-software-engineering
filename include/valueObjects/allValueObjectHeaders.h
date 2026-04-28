@@ -7,3 +7,4 @@
 #include "valueObjects/speed.h"
 #include "valueObjects/station.h"
 #include "valueObjects/transportType.h"
+#include "valueObjects/coordinates.h"
