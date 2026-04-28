@@ -2,6 +2,36 @@
 
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+std::vector<std::string> parseCSVLine(const std::string& line)
+{
+    std::vector<std::string> tokens;
+    std::string currentToken;
+    bool insideQuotes = false;
+
+    for(char c : line)
+    {
+        if (c == '"')
+        {
+            insideQuotes = !insideQuotes; // Status umschalten
+        }
+        else if (c == ',' && !insideQuotes)
+        {
+            tokens.push_back(currentToken);
+            currentToken.clear();
+        }
+        else
+        {
+            currentToken += c;
+        }
+    }
+    tokens.push_back(currentToken); // Letztes Token hinzufügen
+    return tokens;
+}
 
 /*
 zHV data looks like:
@@ -22,16 +52,39 @@ std::unordered_map<std::string, ZHVData> ZHVStationParser::parseStations() const
     }
 
     std::string line;
+
     while (std::getline(file, line))
     {
-        std::istringstream ss(line);
-        std::string dhid, name, municipality;
-        double latitude, longitude;
+        
+        if(line.empty()) continue;
 
-        if (std::getline(ss, dhid, ';') && std::getline(ss, name, ';') && std::getline(ss, municipality, ';') && ss >> latitude && ss.get() && ss >> longitude)
+        auto tokens = parseCSVLine(line);
+
+        // expect 5 tokens (DHID, Name, Lat, Lon, Municipality)
+        if(tokens.size() >= 5)
         {
-            ZHVData data{dhid, name, municipality, Coordinates(latitude, longitude)};
-            stationDataMap[dhid] = data;
+            std::string dhid = tokens[0];
+            std::string name = tokens[1];
+            std::string latStr = tokens[2];
+            std::string lonStr = tokens[3];
+            std::string municipality = tokens[4];
+
+            // replace comma with dot for conversion to double
+            std::replace(latStr.begin(), latStr.end(), ',', '.');
+
+            try 
+            {
+                double latitude = std::stod(latStr);
+                double longitude = std::stod(lonStr);
+
+                ZHVData data{dhid, name, municipality, Coordinates(latitude, longitude)};
+                stationDataMap[dhid] = data;
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr << "Skipping invalid coords for " << dhid << "\n";
+                continue;
+            }
         }
     }
 

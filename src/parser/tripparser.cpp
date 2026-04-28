@@ -13,7 +13,7 @@
 
 using json = nlohmann::json;
 
-TripParser::TripParser(const std::string& filepath) : mFilepath(filepath)
+TripParser::TripParser(const std::string& filepath, const std::shared_ptr<StationRepository>& stationRepo) : mFilepath(filepath), mStationRepo(stationRepo)
 {
 }
 
@@ -59,24 +59,62 @@ Trips TripParser::parse()
 
         
         // extract origin and start time
+        std::string origindhid = "Unknown";
         std::string originName = "Unknown";
         std::string startTimeStr;
         if(userJourneyNode.contains("origin"))
         {
+            for(const auto& idNode : userJourneyNode["origin"]["identifiers"])
+            {
+                // search for identifier "ifopt"
+                if(idNode.value("type", "") == "ifopt")
+                {
+                    origindhid = idNode.value("identifier", "Unknown");
+                    break;
+                }
+            }
             originName = userJourneyNode["origin"].value("name", "Unknown");
 
             // If departureReal is empty, use departurePlanned
             startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
         }
         Station origin(originName);
+        try
+        {
+            origin = *(mStationRepo->getStation(origindhid));
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Warning: " << e.what() << ". Using station name from trip data: " << originName << '\n';
+        }
+        
 
         // extract destination
+        std::string destdhid = "Unknown";
         std::string destName = "Unknown";
         if(userJourneyNode.contains("destination"))
         {
+            for(const auto& idNode : userJourneyNode["destination"]["identifiers"])
+            {
+                // search for identifier "ifopt"
+                if(idNode.value("type", "") == "ifopt")
+                {
+                    destdhid = idNode.value("identifier", "Unknown");
+                    break;
+                }
+            }
             destName = userJourneyNode["destination"].value("name", "Unknown");
         }
         Station dest(destName);
+        try
+        {
+            dest = *(mStationRepo->getStation(destdhid));
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Warning: " << e.what() << ". Using station name from trip data: " << destName << '\n';
+        }
+        
 
         std::chrono::system_clock::time_point startTime;
         if(!startTimeStr.empty())

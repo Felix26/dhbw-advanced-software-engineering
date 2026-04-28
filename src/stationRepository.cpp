@@ -1,15 +1,29 @@
 #include "stationRepository.h"
 
 #include <format>
+#include <sstream>
 
-StationRepository::StationRepository(std::unique_ptr<IStationParser> stationParser)
+StationRepository::StationRepository(const IStationParser &stationParser)
 {
-    mZHVData = stationParser->parseStations();
+    mZHVData = stationParser.parseStations();
 }
 
 std::shared_ptr<Station> StationRepository::getStation(const std::string &dhid) const
 {
-    auto it = mZHVData.find(dhid);
+    // if second part of dhid (de:8212:13) is only 4 chars long, try to find station with leading zero (de:08212:13)
+    std::string usedDhid = dhid;
+    std::stringstream ss(dhid);
+    std::string part1, part2, part3;
+
+    if(std::getline(ss, part1, ':') && std::getline(ss, part2, ':') && std::getline(ss, part3))
+    {
+        if(part2.length() == 4)
+        {
+            usedDhid = std::format("{}:{:05}:{}", part1, std::stoi(part2), part3);
+        }
+    }
+
+    auto it = mZHVData.find(usedDhid);
     if(it != mZHVData.end())
     {
         const ZHVData &data = it->second;
@@ -17,7 +31,7 @@ std::shared_ptr<Station> StationRepository::getStation(const std::string &dhid) 
         return std::make_shared<Station>(stationName, data.coordinates);
     }
    
-    throw std::runtime_error("Station with dhid " + dhid + " not found");
+    throw std::runtime_error("Station with dhid " + usedDhid + " not found");
 }
 
 std::string StationRepository::formatStationName(const ZHVData &data) const

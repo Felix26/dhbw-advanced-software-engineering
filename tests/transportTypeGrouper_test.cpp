@@ -10,11 +10,14 @@
 #include "statistic.h"
 #include "filters/universalFilter.h"
 #include "filters/filter.h"
+#include "stationRepository.h"
+#include "zhvStationParser.h"
 
 
 int main()
 {
-    auto data = ParserFactory::createParserFromFolder("C:\\Users\\Felix\\Nextcloud\\Advanced SWE")->parse();
+    auto stationRepo = StationRepository(ZHVStationParser("C:\\Users\\Felix\\Desktop\\dhbw-advanced-software-engineering\\data\\zHV.csv"));
+    auto data = ParserFactory::createParserFromFolder("C:\\Users\\Felix\\Nextcloud\\Advanced SWE", std::make_shared<StationRepository>(stationRepo))->parse();
 
     UniversalFilter::filterTrips(data, Filter::onlyTrainTrips());
 

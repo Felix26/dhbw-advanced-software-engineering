@@ -12,7 +12,7 @@ Trips FolderTripParser::parse()
     {
         if (entry.is_regular_file() && entry.path().extension() == ".json")
         {
-            TripParser parser(entry.path().string());
+            TripParser parser(entry.path().string(), mStationRepo);
             Trips trips = parser.parse();
             allTrips.insert(allTrips.end(), trips.begin(), trips.end());
         }

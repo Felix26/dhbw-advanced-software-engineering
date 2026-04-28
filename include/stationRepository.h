@@ -9,7 +9,7 @@
 class StationRepository
 {
     public:
-        StationRepository(std::unique_ptr<IStationParser> stationRepository);
+        StationRepository(const IStationParser &stationParser);
 
         std::shared_ptr<Station> getStation(const std::string &idOrName) const;
 
