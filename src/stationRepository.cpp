@@ -2,6 +2,7 @@
 
 #include <format>
 #include <sstream>
+#include <vector>
 
 StationRepository::StationRepository(const IStationParser &stationParser)
 {
@@ -9,6 +10,17 @@ StationRepository::StationRepository(const IStationParser &stationParser)
 }
 
 std::shared_ptr<Station> StationRepository::getStation(const std::string &dhid) const
+{
+    auto result = findStation(dhid);
+    if(result)
+    {
+        return *result;
+    }
+   
+    throw std::runtime_error("Station with dhid " + dhid + " not found");
+}
+
+std::optional<std::shared_ptr<Station>> StationRepository::findStation(const std::string &dhid) const
 {
     // if second part of dhid (de:8212:13) is only 4 chars long, try to find station with leading zero (de:08212:13)
     std::string usedDhid = dhid;
@@ -27,45 +39,8 @@ std::shared_ptr<Station> StationRepository::getStation(const std::string &dhid) 
     if(it != mZHVData.end())
     {
         const ZHVData &data = it->second;
-        std::string stationName = formatStationName(data);
-        return std::make_shared<Station>(stationName, data.coordinates);
-    }
-   
-    throw std::runtime_error("Station with dhid " + usedDhid + " not found");
-}
-
-std::string StationRepository::formatStationName(const ZHVData &data) const
-{
-    if(data.municipality.empty())
-    {
-        return data.name;
+        return std::make_shared<Station>(data.formattedName, data.coordinates);
     }
 
-    if(data.name.find(data.municipality) != std::string::npos)
-    {
-        return data.name;
-    }
-
-    /*
-    e.g. for the entry:
-    de:08316:11220,Sasbach Winzergenossenschaft,"48,137965","7,613581",Sasbach am Kaiserstuhl
-    Should become:
-    Sasbach am Kaiserstuhl Winzergenossenschaft
-    */
-    size_t firstSpacePos = data.name.find(' ');
-    if (firstSpacePos != std::string::npos)
-    {
-        // Isolate the first word of the station name, which is often the same as the municipality name (e.g., "Sasbach" in "Sasbach Winzergenossenschaft").
-        std::string firstWord = data.name.substr(0, firstSpacePos);
-        
-        // does the municipality start with eg "Sasbach "? 
-        // (using "Sasbach "(!) with space, to differentiate between eg "Sasbach" and "Sasbachwalden")
-        if (data.municipality.starts_with(firstWord + " "))
-        {
-            // combine: "Sasbach am Kaiserstuhl" + " Winzergenossenschaft"
-            return data.municipality + data.name.substr(firstSpacePos);
-        }
-    }
-
-    return std::format("{} {}", data.municipality, data.name);
+    return std::nullopt;
 }

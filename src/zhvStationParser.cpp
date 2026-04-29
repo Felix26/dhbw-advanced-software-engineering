@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "stringUtils.h"
+
 std::vector<std::string> parseCSVLine(const std::string& line)
 {
     std::vector<std::string> tokens;
@@ -77,7 +79,7 @@ std::unordered_map<std::string, ZHVData> ZHVStationParser::parseStations() const
                 double latitude = std::stod(latStr);
                 double longitude = std::stod(lonStr);
 
-                ZHVData data{dhid, name, municipality, Coordinates(latitude, longitude)};
+                ZHVData data(dhid, name, municipality, Coordinates(latitude, longitude));
                 stationDataMap[dhid] = data;
             }
             catch (const std::exception& e)

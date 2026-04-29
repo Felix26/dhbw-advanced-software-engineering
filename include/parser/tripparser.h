@@ -19,6 +19,7 @@ class TripParser : public IParser
         std::string mFilepath;
         std::shared_ptr<StationRepository> mStationRepo;
 
-        std::string extractDHIDFromIdentifiers(const json &identifiersNode) const;
-        std::string extractDHID(const json &stationNode) const;
+        std::optional<std::string> extractDHIDFromIdentifiers(const json &identifiersNode) const;
+        std::optional<std::string> extractDHIDFromName(const std::string &name) const;
+        std::optional<std::string> extractDHID(const json &stationNode, const std::string &name) const;
 };

@@ -11,6 +11,7 @@
 #include "json.hpp"
 #include "valueObjects/operator.h"
 #include "valueObjects/transportType.h"
+#include "stringUtils.h"
 
 using json = nlohmann::json;
 
@@ -60,45 +61,49 @@ Trips TripParser::parse()
 
         
         // extract origin and start time
-        std::string origindhid = "Unknown";
+        std::optional<std::string> origindhid = std::nullopt;
         std::string originName = "Unknown";
         std::string startTimeStr;
-        Station origin(originName);
-        try
-        {
-            if(userJourneyNode.contains("origin"))
-            {
-                originName = userJourneyNode["origin"].value("name", "Unknown");
-                origindhid = extractDHID(userJourneyNode["origin"]);
 
-                // If departureReal is empty, use departurePlanned
-                startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
-            }
-            origin = *(mStationRepo->getStation(origindhid));
-        }
-        catch(const std::exception& e)
+        if(userJourneyNode.contains("origin"))
         {
-            std::cerr << "Warning: " << e.what() << ". Using station name from trip data: " << originName << '\n';
+            originName = userJourneyNode["origin"].value("name", "Unknown");
+            origindhid = extractDHID(userJourneyNode["origin"], originName);
+
+            // If departureReal is empty, use departurePlanned
+            startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
         }
-        
+        Station origin(originName);
+
+        if(origindhid && mStationRepo->findStation(*origindhid))
+        {
+            auto stationOpt = mStationRepo->findStation(*origindhid);
+            origin = **stationOpt;
+        }
+        else
+        {
+            //std::cerr << "Warning: Could not extract DHID for station. Using station name from trip data: " << originName << '\n';
+        }        
 
         // extract destination
-        std::string destdhid = "Unknown";
+        std::optional<std::string> destdhid = std::nullopt;
         std::string destName = "Unknown";
+
+        if(userJourneyNode.contains("destination"))
+        {
+            destName = userJourneyNode["destination"].value("name", "Unknown");
+            destdhid = extractDHID(userJourneyNode["destination"], destName);
+        }
         Station dest(destName);
 
-        try
+        if(destdhid && mStationRepo->findStation(*destdhid))
         {
-            if(userJourneyNode.contains("destination"))
-            {
-                destName = userJourneyNode["destination"].value("name", "Unknown");
-                destdhid = extractDHID(userJourneyNode["destination"]);
-            }
-            dest = *(mStationRepo->getStation(destdhid));
+            auto stationOpt = mStationRepo->findStation(*destdhid);
+            dest = **stationOpt;
         }
-        catch(const std::exception& e)
+        else
         {
-            std::cerr << "Warning: " << e.what() << ". Using station name from trip data: " << destName << '\n';
+            //std::cerr << "Warning: Could not extract DHID for station. Using station name from trip data: " << destName << '\n';
         }
         
 
@@ -189,9 +194,9 @@ Trips TripParser::parse()
     return result;
 }
 
-std::string TripParser::extractDHIDFromIdentifiers(const json &identifiersNode) const
+std::optional<std::string> TripParser::extractDHIDFromIdentifiers(const json &identifiersNode) const
 {
-    for(const auto& idNode : identifiersNode)
+    for(const auto &idNode : identifiersNode)
     {
         if(idNode.value("type", "") == "ifopt")
         {
@@ -202,10 +207,10 @@ std::string TripParser::extractDHIDFromIdentifiers(const json &identifiersNode) 
     }
 
     // If no identifier with type "ifopt" is found, try to extract any identifier that matches the DHID pattern (e.g., "de:08215:1221")
-    std::regex dhidRegex(R"(de:\d{5}:\d{1,5})");
+    static const std::regex dhidRegex(R"(de:\d{5}:\d{1,6})");
     std::smatch match;
 
-    for(const auto& idNode : identifiersNode)
+    for(const auto &idNode : identifiersNode)
     {
         std::string identifier = idNode.value("identifier", "");
         
@@ -217,16 +222,71 @@ std::string TripParser::extractDHIDFromIdentifiers(const json &identifiersNode) 
             return match.str(0); 
         }
     }
-    throw std::runtime_error("No dhid identifier found");
+
+    return std::nullopt;
 }
 
-std::string TripParser::extractDHID(const json &destinationNode) const
+std::optional<std::string> TripParser::extractDHIDFromName(const std::string &name) const
 {
+    for(const auto &[dhid, data] : mStationRepo->mZHVData)
+    {
+        if(data.formattedName == name)
+        {
+            return dhid;
+        }
+    }
+
+    // If no exact match is found, try to find the station with the highest similarity based on the station name
+    double highestSimilarity = 0.0;
+    std::string bestMatchDhid;
+
+    std::vector<std::string> nameTokens = StringUtils::tokenize(name);
+
+    for(const auto &[dhid, data] : mStationRepo->mZHVData)
+    {
+        double similarity = StringUtils::calculateSimilarity(nameTokens, data.nameTokens);
+        if(similarity > highestSimilarity)
+        {
+            highestSimilarity = similarity;
+            bestMatchDhid = dhid;
+        }
+        if(highestSimilarity > 0.8)
+        {
+            return bestMatchDhid;
+        }
+    }
+
+    if(!bestMatchDhid.empty() && highestSimilarity > 0.7)
+    {
+        return bestMatchDhid;
+    }
+
+    return std::nullopt;
+}
+
+std::optional<std::string> TripParser::extractDHID(const json &destinationNode, const std::string &name) const
+{
+    static std::unordered_map<std::string, std::string> cache;
+    if(cache.contains(name))
+    {
+        return cache[name];
+    }
+
     if(destinationNode.contains("identifiers"))
     {
-        return extractDHIDFromIdentifiers(destinationNode["identifiers"]);
+        auto result = extractDHIDFromIdentifiers(destinationNode["identifiers"]);
+        if(result)
+        {
+            cache[name] = *result;
+            return *result;
+        }
     }
-    
-    
-    throw std::runtime_error("Destination node does not contain identifiers");
+
+    auto result = extractDHIDFromName(name);
+    if(result)
+    {
+        cache[name] = *result;
+        return *result;
+    }
+    return std::nullopt;
 }
