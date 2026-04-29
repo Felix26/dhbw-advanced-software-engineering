@@ -9,8 +9,25 @@
 #include "statistic.h"
 #include "valueObjects/station.h"
 
+#include "germanyBoundary.h"
+
 namespace Printers
 {
+    inline bool isInsideGermany(double lat, double lon)
+    {
+        bool inside = false;
+        for(size_t i = 0, j = Printers::borders.size() - 1; i < Printers::borders.size(); j = i++)
+        {
+            double xi = Printers::borders[i].first, yi = Printers::borders[i].second;
+            double xj = Printers::borders[j].first, yj = Printers::borders[j].second;
+
+            // Strahlensatz: Schneidet der Strahl die Kante?
+            bool intersect = ((yi > lat) != (yj > lat)) && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+            if(intersect) inside = !inside;
+        }
+        return inside;
+    }
+
     inline std::string getHeatmapCell(double ratio)
     {
         ratio = std::clamp(ratio, 0.0, 1.0);
@@ -140,7 +157,18 @@ namespace Printers
             {
                 if (grid[y][x] == ValueType{}) 
                 {
-                    os << ' ';
+                    double cellLon = MIN_LON + (static_cast<double>(x) / (width - 1)) * (MAX_LON - MIN_LON);
+                    double cellLat = MAX_LAT - (static_cast<double>(y) / (height - 1)) * (MAX_LAT - MIN_LAT);
+
+                    if (isInsideGermany(cellLat, cellLon)) 
+                    {
+                        // print a light gray dot for empty cells on land, otherwise print a space
+                        os << "\x1B[38;5;243m\xE2\x96\x91\x1B[0m"; 
+                    } 
+                    else 
+                    {
+                        os << ' ';
+                    }
                 }
                 else
                 {

@@ -12,7 +12,7 @@ file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
 add_library(logic_core STATIC ${LIB_SOURCES})
-target_include_directories(logic_core PUBLIC include external/json)
+target_include_directories(logic_core PUBLIC include external/json data)
 
 if(BUILD_APP)
     # Erzeuge das Executable
