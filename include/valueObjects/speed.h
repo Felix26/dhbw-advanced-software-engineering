@@ -9,6 +9,8 @@ class Speed
         auto operator<=>(const Speed& other) const = default;
 
         double operator/(const Speed& other) const;
+        Speed operator+=(const Speed& other);
+        Speed operator/(double divisor) const;
 
         friend std::ostream& operator<<(std::ostream& os, const Speed& speed);
 

@@ -34,6 +34,10 @@ void TripWizard::run(const Trips &trips)
                 handleOutput();
                 break;
 
+            case WizardState::ConfiguringOutputStyle:
+                handleOutputStyle();
+                break;
+
             case WizardState::Finalizing:
                 execute(trips);
                 break;
@@ -161,6 +165,11 @@ void TripWizard::handleGrouping()
             mGroupingType = GroupingType::ByVisitedStations;
             mWizardState = WizardState::ConfiguringAggregation;
             break;
+
+        case 7:
+            mGroupingType = GroupingType::ByPassedStops;
+            mWizardState = WizardState::ConfiguringAggregation;
+            break;
     }
 }
 
@@ -220,9 +229,8 @@ void TripWizard::handleOutput()
 
     if (!averagePossible)
     {
-        
         mOutputType = OutputType::AsTotalValues;
-        mWizardState = WizardState::Finalizing;
+        mWizardState = WizardState::ConfiguringOutputStyle;
         return;
     }
 
@@ -244,11 +252,49 @@ void TripWizard::handleOutput()
 
         case 1:
             mOutputType = OutputType::AsTotalValues;
-            mWizardState = WizardState::Finalizing;
+            mWizardState = WizardState::ConfiguringOutputStyle;
             break;
 
         case 2:
             mOutputType = OutputType::AsAverages;
+            mWizardState = WizardState::ConfiguringOutputStyle;
+            break;
+    }
+}
+
+void TripWizard::handleOutputStyle()
+{
+    bool mapPossible = mGroupingType == GroupingType::ByOrigin || mGroupingType == GroupingType::ByDestination || mGroupingType == GroupingType::ByVisitedStations || mGroupingType == GroupingType::ByPassedStops;
+    if(!mapPossible)
+    {
+        mOutputStyle = OutputStyle::AsChart;
+        mWizardState = WizardState::Finalizing;
+        return;
+    }
+
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "   SCHRITT 5: AUSGABE-STYLE" << std::endl;
+    std::cout << "========================================" << std::endl;
+    std::cout << "Wie sollen die Werte dargestellt werden?" << std::endl;
+    std::cout << "1. Als Diagramm" << std::endl;
+    std::cout << "2. Als Karte" << std::endl;
+    std::cout << "0. [ZURÜCK zur Ausgabe]" << std::endl;
+
+    size_t choice = getNumberFromCommandLine(0, 2);
+
+    switch (choice)
+    {
+        case 0:
+            mWizardState = WizardState::ConfiguringOutput;
+            break;
+
+        case 1:
+            mOutputStyle = OutputStyle::AsChart;
+            mWizardState = WizardState::Finalizing;
+            break;
+
+        case 2:
+            mOutputStyle = OutputStyle::AsMap;
             mWizardState = WizardState::Finalizing;
             break;
     }

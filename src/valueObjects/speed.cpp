@@ -24,3 +24,14 @@ std::string Speed::getValueTypeName()
 {
     return "Geschwindigkeit";
 }
+
+Speed Speed::operator+=(const Speed &other)
+{
+    this->mSpeed += other.mSpeed;
+    return *this;
+}
+
+Speed Speed::operator/(double divisor) const
+{
+    return Speed(mSpeed / divisor);
+}

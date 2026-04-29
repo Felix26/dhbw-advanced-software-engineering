@@ -112,6 +112,7 @@ namespace Printers
         const double MAX_LON = 15.0; // east
 
         std::vector<std::vector<ValueType>> grid(height, std::vector<ValueType>(width, ValueType{}));
+        std::vector<std::vector<size_t>> countGrid(height, std::vector<size_t>(width, 0));
         ValueType maxGridValue = ValueType{};
         size_t stationsOnMap = 0;
         size_t stationsIgnored = 0;
@@ -136,9 +137,26 @@ namespace Printers
             x = std::clamp(x, size_t(0), width - 1);
             y = std::clamp(y, size_t(0), height - 1);
 
-            grid[y][x] += val; 
+            grid[y][x] += val;
+            countGrid[y][x]++;
             maxGridValue = std::max(maxGridValue, grid[y][x]);
             stationsOnMap++;
+        }
+
+        if(useAverage || std::is_same_v<ValueType, Speed>)
+        {
+            maxGridValue = ValueType{}; // recalculate max for averages
+            for(size_t y = 0; y < height; ++y)
+            {
+                for(size_t x = 0; x < width; ++x)
+                {
+                    if(countGrid[y][x] > 0)
+                    {
+                        grid[y][x] = grid[y][x] / countGrid[y][x];
+                        maxGridValue = std::max(maxGridValue, grid[y][x]);
+                    }
+                }
+            }
         }
 
         if (stationsOnMap == 0)

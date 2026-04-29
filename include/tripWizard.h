@@ -19,6 +19,7 @@
 #include "statistic.h"
 
 #include "printers/statisticPrinter.h"
+#include "printers/mapPrinter.h"
 
 
 enum class WizardState
@@ -27,7 +28,7 @@ enum class WizardState
     ConfiguringGrouping,
     ConfiguringAggregation,
     ConfiguringOutput,
-    //ConfiguringOrder,
+    ConfiguringOutputStyle,
     Finalizing,
     Exit
 };
@@ -35,6 +36,7 @@ enum class WizardState
 enum class GroupingType { None, ByTransportType, ByMonth, ByOrigin, ByDestination, ByVisitedStations, ByPassedStops };
 enum class AggregationType { None, ByCount, ByDistance, ByDuration, BySpeed };
 enum class OutputType { AsTotalValues, AsAverages };
+enum class OutputStyle { AsChart, AsMap };
 //enum class OrderType { KeyAscending, KeyDescending, ValueAscending, ValueDescending }
 
 class TripWizard
@@ -47,11 +49,13 @@ class TripWizard
         GroupingType mGroupingType = GroupingType::None;
         AggregationType mAggregationType = AggregationType::None;
         OutputType mOutputType = OutputType::AsTotalValues;
+        OutputStyle mOutputStyle = OutputStyle::AsChart;
 
         void handleFilter();
         void handleGrouping();
         void handleAggregation();
         void handleOutput();
+        void handleOutputStyle();
 
         void execute(const Trips &trips);
 
@@ -78,7 +82,20 @@ class TripWizard
             {
                 stats.sortByValue();
             }
-
+            if(mOutputStyle == OutputStyle::AsMap)
+            {
+                if constexpr (std::is_same_v<Station, KeyType>)
+                {   
+                    std::cout << "\n--- Auswertung ---\n";
+                    std::cout << Printers::map(stats, mOutputType == OutputType::AsAverages) << std::endl;
+                    std::cout << "------------------\n";
+                }
+                else
+                {
+                    std::cout << "Die Ausgabe als Karte ist nur für Stationen möglich." << std::endl;
+                }
+                return;
+            }
             // 3. Die Ausgabe (Setzt voraus, dass der operator<< für Statistic überladen ist)
             std::cout << "\n--- Auswertung ---\n";
             std::cout << Printers::pretty(stats, mOutputType == OutputType::AsAverages) << std::endl;
