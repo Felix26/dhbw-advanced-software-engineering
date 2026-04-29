@@ -4,14 +4,13 @@
 #include <iostream>
 #include <chrono>
 #include <regex>
+#include <memory>
 
 #include "trips/traintrip.h"
 #include "trips/bustrip.h"
-#include "valueObjects/station.h"
 #include "json.hpp"
-#include "valueObjects/operator.h"
-#include "valueObjects/transportType.h"
 #include "stringUtils.h"
+#include "valueObjects/allValueObjectHeaders.h"
 
 using json = nlohmann::json;
 
@@ -61,134 +60,62 @@ Trips TripParser::parse()
 
         
         // extract origin and start time
-        std::optional<std::string> origindhid = std::nullopt;
-        std::string originName = "Unknown";
-        std::string startTimeStr;
-
-        if(userJourneyNode.contains("origin"))
-        {
-            originName = userJourneyNode["origin"].value("name", "Unknown");
-            origindhid = extractDHID(userJourneyNode["origin"], originName);
-
-            // If departureReal is empty, use departurePlanned
-            startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
-        }
-        Station origin(originName);
-
-        if(origindhid && mStationRepo->findStation(*origindhid))
-        {
-            auto stationOpt = mStationRepo->findStation(*origindhid);
-            origin = **stationOpt;
-        }
-        else
-        {
-            //std::cerr << "Warning: Could not extract DHID for station. Using station name from trip data: " << originName << '\n';
-        }        
+        std::string startTimeStr = userJourneyNode["origin"].value("startTime", "");
+        std::chrono::system_clock::time_point startTime = parseTime(startTimeStr);
+        std::string originName = userJourneyNode["origin"].value("name", "Unknown");
+        Station origin = parseStationNode(userJourneyNode["origin"]);
 
         // extract destination
-        std::optional<std::string> destdhid = std::nullopt;
-        std::string destName = "Unknown";
-
-        if(userJourneyNode.contains("destination"))
-        {
-            destName = userJourneyNode["destination"].value("name", "Unknown");
-            destdhid = extractDHID(userJourneyNode["destination"], destName);
-        }
-        Station dest(destName);
-
-        if(destdhid && mStationRepo->findStation(*destdhid))
-        {
-            auto stationOpt = mStationRepo->findStation(*destdhid);
-            dest = **stationOpt;
-        }
-        else
-        {
-            //std::cerr << "Warning: Could not extract DHID for station. Using station name from trip data: " << destName << '\n';
-        }
+        std::string destName = userJourneyNode["destination"].value("name", "Unknown");
+        Station dest = parseStationNode(userJourneyNode["destination"]);
         
-
-        std::chrono::system_clock::time_point startTime;
-        if(!startTimeStr.empty())
+        Operator op(0, "Unknown");
+        if (userJourneyNode.contains("operator") && userJourneyNode["operator"].is_object())
         {
-            // Data format is eg "2026-04-02T10:20:00+00:00"
-            std::istringstream ss(startTimeStr);
-            std::chrono::system_clock::time_point tp;
-            ss >> std::chrono::parse("%Y-%m-%dT%H:%M:%S", tp);
-            startTime = tp;
+            op = Operator(userJourneyNode["operator"].value("id", 0), userJourneyNode["operator"].value("name", "Unknown"));
         }
 
-        if(category == "bus")
+        // 4. Trip-Objekt erzeugen (Factory)
+        auto trip = createTrip(statusId, origin, dest, distance, duration, startTime, category, lineName, op);
+        if (!trip)
         {
-            auto bus = std::make_shared<BusTrip>(statusId, origin, dest, distance, duration, startTime, lineName);
-            result.push_back(bus);
+            continue;
         }
-        else
+
+        // extract stopovers from global trip node
+        if(item.contains("trip") && item["trip"].contains("stopovers") && item["trip"]["stopovers"].is_array())
         {
-            int opId = 0;
-            std::string opName = "Unknown";
+            bool isRecording = false;
             
-            if(userJourneyNode.contains("operator") && userJourneyNode["operator"].is_object())
+            // Wir müssen casten, da Stopovers aktuell anscheinend nur bei TrainTrip unterstützt werden
+            auto trainTrip = std::dynamic_pointer_cast<TrainTrip>(*trip);
+            
+            if(trainTrip) 
             {
-                opId = userJourneyNode["operator"].value("id", 0);
-                opName = userJourneyNode["operator"].value("name", "Unknown");
-            }
-            Operator op(opId, opName);
-
-            std::shared_ptr<TrainTrip> train;
-            if(category == "express" || category == "regionalExp" || (category == "nationalExpress" && lineName.find("IC") != std::string::npos)) // "regionalExp" is used for FlixTrains, "nationalExpress" is used for ICEs
-            {
-                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::Fernverkehr, lineName, op);
-            }
-            else if(category == "regional" || category == "nationalExpress") // "nationalExpress" is used for french regional trains
-            {
-                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::Regionalverkehr, lineName, op);
-            }
-            else if(category == "suburban")
-            {
-                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::SBahn, lineName, op);
-            }
-            else if(category == "tram")
-            {
-                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::Tram, lineName, op);
-            }
-            else if(category == "subway")
-            {
-                train = std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, TransportType::UBahn, lineName, op);
-            }
-            else
-            {
-                std::cerr << "Unknown category: " << category << '\n';
-                continue;
-            }
-
-            // extract stopovers from global trip node
-            if(item.contains("trip") && item["trip"].contains("stopovers") && item["trip"]["stopovers"].is_array())
-            {
-                bool isRecording = false;
-
-                for(const auto& stopNode : item["trip"]["stopovers"])
+                for(const auto &stopNode : item["trip"]["stopovers"])
                 {
                     std::string stopName = stopNode.value("name", "Unknown");
 
-                    if(stopName == origin.getName())
+                    if(stopName == originName)
                     {
                         isRecording = true;
                         continue;
                     }
-
-                    if(stopName == dest.getName())
+                    if(stopName == destName)
                     {
                         break;
                     }
 
                     if(isRecording)
                     {
-                        train->addStopover(Station(stopName));
+                        Station stopoverStation = parseStationNode(stopNode);
+                        trainTrip->addStopover(stopoverStation);
                     }
                 }
             }
-            result.push_back(train);
         }
+
+        result.push_back(*trip);
     }
 
     return result;
@@ -289,4 +216,71 @@ std::optional<std::string> TripParser::extractDHID(const json &destinationNode, 
         return *result;
     }
     return std::nullopt;
+}
+
+Station TripParser::parseStationNode(const json &stationNode) const
+{
+    std::string name = stationNode.value("name", "Unknown");
+    std::optional<std::string> dhid = extractDHID(stationNode, name);
+
+    if(dhid && mStationRepo->findStation(*dhid))
+    {
+        auto stationOpt = mStationRepo->findStation(*dhid);
+        return **stationOpt;
+    }
+    
+    //std::cerr << "Warning: Could not extract DHID for station. Using station name from trip data: " << name << '\n';
+    return Station(name);
+}
+
+std::chrono::system_clock::time_point TripParser::parseTime(const std::string &timeStr) const
+{
+    if(timeStr.empty())
+    {
+        return std::chrono::system_clock::time_point();
+    }
+
+    std::istringstream ss(timeStr);
+    std::chrono::system_clock::time_point tp;
+    ss >> std::chrono::parse("%Y-%m-%dT%H:%M:%S", tp);
+    return tp;
+}
+
+std::optional<std::shared_ptr<Trip>> TripParser::createTrip(int statusId, const Station &origin, const Station &dest, int distance, int duration, const std::chrono::system_clock::time_point &startTime, const std::string &category, const std::string &lineName, const Operator &op) const
+{
+    if(category == "bus")
+    {
+        return std::make_shared<BusTrip>(statusId, origin, dest, distance, duration, startTime, lineName);
+    }
+    else
+    {
+        TransportType type = TransportType::Unknown;
+        if(category == "express" || category == "regionalExp" || (category == "nationalExpress" && lineName.find("IC") != std::string::npos)) // "regionalExp" is used for FlixTrains, "nationalExpress" is used for ICEs
+        {
+            type = TransportType::Fernverkehr;
+        }
+        else if(category == "regional" || category == "nationalExpress") // "nationalExpress" is used for french regional trains
+        {
+            type = TransportType::Regionalverkehr;
+        }
+        else if(category == "suburban")
+        {
+            type = TransportType::SBahn;
+        }
+        else if(category == "tram")
+        {
+            type = TransportType::Tram;
+        }
+        else if(category == "subway")
+        {
+            type = TransportType::UBahn;
+        }
+        else
+        {
+            std::cerr << "Unknown category: " << category << '\n';
+            return std::nullopt;
+        }
+
+        return std::make_shared<TrainTrip>(statusId, origin, dest, distance, duration, startTime, type, lineName, op);
+    }
 }

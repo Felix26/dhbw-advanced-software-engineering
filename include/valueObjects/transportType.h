@@ -7,7 +7,7 @@ class Trip;
 class TransportType
 {
     public:
-        enum Value { Fernverkehr, Regionalverkehr, SBahn, UBahn, Bus, Tram };
+        enum Value { Fernverkehr, Regionalverkehr, SBahn, UBahn, Bus, Tram, Unknown };
 
         constexpr TransportType(Value type) : mType(type) {}
 
