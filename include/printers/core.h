@@ -12,12 +12,15 @@ namespace Printers
     {
         const T &value;
         bool useAverage = false;
+        size_t width;
+
+        PrettyWrapper(const T &value, bool useAverage = false, size_t width = 80) : value(value), useAverage(useAverage), width(width) {}
     };
 
     template <typename T>
-    inline PrettyWrapper<T> pretty(const T &value, bool useAverage = false)
+    inline PrettyWrapper<T> pretty(const T &value, bool useAverage = false, size_t width = 80)
     {
-        return PrettyWrapper<T>{value, useAverage};
+        return PrettyWrapper<T>{value, useAverage, width};
     }
 
     template <typename T>

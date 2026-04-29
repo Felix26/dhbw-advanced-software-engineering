@@ -82,12 +82,13 @@ class TripWizard
             {
                 stats.sortByValue();
             }
+            size_t consoleWidth = getConsoleWidth() - 10;
             if(mOutputStyle == OutputStyle::AsMap)
             {
                 if constexpr (std::is_same_v<Station, KeyType>)
                 {   
                     std::cout << "\n--- Auswertung ---\n";
-                    std::cout << Printers::map(stats, mOutputType == OutputType::AsAverages) << std::endl;
+                    std::cout << Printers::map(stats, mOutputType == OutputType::AsAverages, consoleWidth, consoleWidth / 2.5) << std::endl;
                     std::cout << "------------------\n";
                 }
                 else
@@ -98,7 +99,7 @@ class TripWizard
             }
             // 3. Die Ausgabe (Setzt voraus, dass der operator<< für Statistic überladen ist)
             std::cout << "\n--- Auswertung ---\n";
-            std::cout << Printers::pretty(stats, mOutputType == OutputType::AsAverages) << std::endl;
+            std::cout << Printers::pretty(stats, mOutputType == OutputType::AsAverages, consoleWidth) << std::endl;
             std::cout << "------------------\n";
         }
 
@@ -136,4 +137,6 @@ class TripWizard
         {
             dispatchAggregation<KeyType>(UniversalGrouper::groupTrips(data, extractor));
         }
+
+        static size_t getConsoleWidth();
 };

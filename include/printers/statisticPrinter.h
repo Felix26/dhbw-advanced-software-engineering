@@ -14,8 +14,8 @@ namespace Printers
         // PREPARING:
     
         const auto &stats = wrapper.value;
-        const size_t maxAllowedLineLength = 120;
-        const size_t maxAllowedKeyLength = 50;
+        const size_t maxAllowedLineLength = wrapper.width;
+        const size_t maxAllowedKeyLength = static_cast<size_t>(std::min<double>(50.0, maxAllowedLineLength / 2.5));
 
         if (stats.getData().empty())
         {
