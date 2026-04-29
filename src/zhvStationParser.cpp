@@ -73,6 +73,7 @@ std::unordered_map<std::string, ZHVData> ZHVStationParser::parseStations() const
 
             // replace comma with dot for conversion to double
             std::replace(latStr.begin(), latStr.end(), ',', '.');
+            std::replace(lonStr.begin(), lonStr.end(), ',', '.');
 
             try 
             {

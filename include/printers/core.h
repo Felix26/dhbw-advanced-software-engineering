@@ -20,6 +20,23 @@ namespace Printers
         return PrettyWrapper<T>{value, useAverage};
     }
 
+    template <typename T>
+    struct MapWrapper
+    {
+        const T &value;
+        bool useAverage = false;
+        size_t width;
+        size_t height;
+
+        MapWrapper(const T &value, bool useAverage = false, size_t width = 200, size_t height = 75) : value(value), width(width), height(height), useAverage(useAverage) {}
+    };
+
+    template <typename T>
+    inline MapWrapper<T> map(const T &value, bool useAverage = false, size_t width = 200, size_t height = 75)
+    {
+        return MapWrapper<T>{value, useAverage, width, height};
+    }
+
     template <typename ValueType>
     constexpr bool existsAverage(const AggregatorResult<ValueType> &result)
     {

@@ -6,6 +6,7 @@ class Count
 {
     public:
         Count(size_t count);
+        Count() : mCount(0) {}
 
         Count operator+(const Count& other) const;
         Count &operator+=(const Count& other);

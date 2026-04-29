@@ -5,6 +5,7 @@
 class Speed
 {
     public:
+        Speed() : mSpeed(0.0) {}
         auto operator<=>(const Speed& other) const = default;
 
         double operator/(const Speed& other) const;

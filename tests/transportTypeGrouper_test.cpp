@@ -13,6 +13,8 @@
 #include "stationRepository.h"
 #include "zhvStationParser.h"
 
+#include "printers/mapPrinter.h"
+
 
 int main()
 {
@@ -22,15 +24,20 @@ int main()
     UniversalFilter::filterTrips(data, Filter::onlyTrainTrips());
 
     auto groupedByTransportType = UniversalGrouper::groupTrips(data, TripGrouper::byTransportType());
-    auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byVisitedStations());
+    auto groupedByVisitedStations = UniversalGrouper::groupTrips(data, TripGrouper::byPassedStops());
     auto groupedByMonth = UniversalGrouper::groupTrips(data, TripGrouper::byMonth());
     
     //auto statisticByTransportType = Statistic(groupedByMonth, DistanceAggregator());
     auto statisticByTransportType = Statistic(data, DistanceAggregator());
+    auto statisticByVisitedStations = Statistic(groupedByVisitedStations, DistanceAggregator());
     
     std::cout << "Statistic by Transport Type:" << std::endl;
     statisticByTransportType.sortByKey();
     std::cout << statisticByTransportType << std::endl;
+
+    std::cout << "Statistic by Visited Stations:" << std::endl;
+    statisticByVisitedStations.sortByKey();
+    std::cout << Printers::map(statisticByVisitedStations, false, 295, 110) << std::endl;
     
     /*for (const auto& [transportType, trips] : groupedByTransportType)
     {

@@ -9,6 +9,7 @@ class Distance
 {
     public:
         static Distance fromMeters(double meters);
+        Distance() : mDistance(0.0) {}
 
         double getDistanceInMeters() const;
 

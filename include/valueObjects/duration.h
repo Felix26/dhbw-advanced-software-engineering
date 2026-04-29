@@ -7,6 +7,7 @@ class Duration
 {
     public:
         static Duration fromMinutes(int minutes);
+        Duration() : mDuration(std::chrono::minutes(0)) {}
 
         int getDurationInMinutes() const;
         int getDurationInSeconds() const;
