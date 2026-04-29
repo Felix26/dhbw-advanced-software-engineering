@@ -14,24 +14,22 @@
     #include <windows.h>
 #endif
 
-int main()
+int main(int argc, char* argv[])
 {
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
     #endif
 
-    auto stationRepo = StationRepository(ZHVStationParser("C:\\Users\\Felix\\Desktop\\dhbw-advanced-software-engineering\\data\\zHV.csv"));
-    std::unique_ptr<IParser> tripParser = ParserFactory::createParserFromFolder("C:\\Users\\Felix\\Nextcloud\\Advanced SWE", std::make_shared<StationRepository>(stationRepo));
-    //std::unique_ptr<IParser> tripParser = ParserFactory::createMockParser();
+    if(argc < 2)
+    {
+        std::cerr << "Usage: " << argv[0] << " <path_to_data_folder>" << std::endl;
+        return 1;
+    }
+
+    auto stationRepo = StationRepository(ZHVStationParser(argv[1] + std::string("/zHV.csv")));
+    std::unique_ptr<IParser> tripParser = ParserFactory::createParserFromFolder(argv[1], std::make_shared<StationRepository>(stationRepo));
 
     Trips trips = tripParser->parse();
-
-    // Statistic statistic(UniversalGrouper::groupTrips(trips, TripGrouper::byVisitedStations()), CountAggregator());
-
-    // statistic.sortByValue();
-
-    // std::cout << Printers::PrettyWrapper(statistic) << std::endl;
-    // //std::cout << statistic << std::endl;
 
     TripWizard{}.run(trips);
     
