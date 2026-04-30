@@ -99,7 +99,7 @@ class TripWizard
             }
             // 3. Die Ausgabe (Setzt voraus, dass der operator<< für Statistic überladen ist)
             std::cout << "\n--- Auswertung ---\n";
-            std::cout << Printers::pretty(stats, mOutputType == OutputType::AsAverages, consoleWidth) << std::endl;
+            std::cout << Printers::barChart(stats, mOutputType == OutputType::AsAverages, consoleWidth) << std::endl;
             std::cout << "------------------\n";
         }
 

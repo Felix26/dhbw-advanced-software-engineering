@@ -21,9 +21,9 @@ namespace Printers
         | Geschwindigkeit	läne/dauer
         | Datum:		    34. April 3095
         | Betreiber:		DB InfraNoGo*/
-    inline std::ostream& operator<<(std::ostream& os, const PrettyWrapper<Trips>& wrapper)
+    inline std::ostream& operator<<(std::ostream& os, const TripsWrapper &wrapper)
     {
-        for (const auto& trip : wrapper.value)
+        for (const auto& trip : wrapper.trips)
         {
             // Header
             os << "Trip: " << trip->getTransportName();

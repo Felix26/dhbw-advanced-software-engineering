@@ -8,19 +8,19 @@
 namespace Printers
 {
     template <typename T>
-    struct PrettyWrapper
+    struct BarChartWrapper
     {
         const T &value;
         bool useAverage = false;
         size_t width;
 
-        PrettyWrapper(const T &value, bool useAverage = false, size_t width = 80) : value(value), useAverage(useAverage), width(width) {}
+        BarChartWrapper(const T &value, bool useAverage = false, size_t width = 80) : value(value), useAverage(useAverage), width(width) {}
     };
 
     template <typename T>
-    inline PrettyWrapper<T> pretty(const T &value, bool useAverage = false, size_t width = 80)
+    inline BarChartWrapper<T> barChart(const T &value, bool useAverage = false, size_t width = 80)
     {
-        return PrettyWrapper<T>{value, useAverage, width};
+        return BarChartWrapper<T>{value, useAverage, width};
     }
 
     template <typename T>
@@ -38,6 +38,18 @@ namespace Printers
     inline MapWrapper<T> map(const T &value, bool useAverage = false, size_t width = 200, size_t height = 75)
     {
         return MapWrapper<T>{value, useAverage, width, height};
+    }
+
+    struct TripsWrapper
+    {
+        const Trips &trips;
+
+        TripsWrapper(const Trips &trips) : trips(trips) {}
+    };
+
+    inline TripsWrapper trips(const Trips &trips)
+    {
+        return TripsWrapper(trips);
     }
 
     template <typename ValueType>

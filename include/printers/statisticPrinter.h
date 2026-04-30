@@ -9,7 +9,7 @@
 namespace Printers
 {
     template <typename KeyType, typename ValueType>
-    inline std::ostream& operator<<(std::ostream& os, const PrettyWrapper<Statistic<KeyType, ValueType>> &wrapper)
+    inline std::ostream& operator<<(std::ostream& os, const BarChartWrapper<Statistic<KeyType, ValueType>> &wrapper)
     {
         // PREPARING:
     

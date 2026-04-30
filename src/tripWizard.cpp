@@ -364,7 +364,7 @@ void TripWizard::execute(const Trips &trips)
         case GroupingType::None:
             if(mAggregationType == AggregationType::None)
             {
-                std::cout << Printers::PrettyWrapper(modifiableTrips) << std::endl;
+                std::cout << Printers::trips(modifiableTrips) << std::endl;
             }
             else
             {
