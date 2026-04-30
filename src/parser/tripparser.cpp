@@ -60,7 +60,8 @@ Trips TripParser::parse()
 
         
         // extract origin and start time
-        std::string startTimeStr = userJourneyNode["origin"].value("startTime", "");
+        std::string startTimeStr = (!userJourneyNode["origin"]["departureReal"].is_null()) ? userJourneyNode["origin"].value("departureReal", "") : userJourneyNode["origin"].value("departurePlanned", "");
+        std::cout << "Parsing trip with start time: " << startTimeStr << std::endl;
         std::chrono::system_clock::time_point startTime = parseTime(startTimeStr);
         std::string originName = userJourneyNode["origin"].value("name", "Unknown");
         Station origin = parseStationNode(userJourneyNode["origin"]);

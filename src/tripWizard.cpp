@@ -80,6 +80,8 @@ void TripWizard::handleFilter()
     
     size_t filterNum = getNumberFromCommandLine(1, 3);
 
+    int year;
+
     switch(filterNum)
     {
         case 1:
@@ -89,7 +91,8 @@ void TripWizard::handleFilter()
         case 2:
             // select a certain year
             std::cout << "\nFür welches Jahr sollen Daten angezeigt werden?" << std::endl;
-            mFilters.emplace_back(Filter::filterByYear(static_cast<int>(getNumberFromCommandLine(2000, 2100))));
+            year = static_cast<int>(getNumberFromCommandLine(2000, 2100));
+            mFilters.emplace_back(Filter::filterByYear(year));
             break;
 
         case 3:

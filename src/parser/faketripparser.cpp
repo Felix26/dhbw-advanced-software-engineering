@@ -48,9 +48,9 @@ Trips FakeTripParser::parse()
     re7->addStopover(denzlingen);
     result.push_back(re7);
 
-    // 3. Regionalverkehr: RB26 von Freiburg nach Denzlingen
-    auto rb26 = std::make_shared<TrainTrip>(1003, freiburg, denzlingen, 12000, 15, time3, TransportType::SBahn, "S4", dbRegio);
-    result.push_back(rb26);
+    // 3. Regionalverkehr: S4 von Freiburg nach Denzlingen
+    auto s4 = std::make_shared<TrainTrip>(1003, freiburg, denzlingen, 12000, 15, time3, TransportType::SBahn, "S4", dbRegio);
+    result.push_back(s4);
 
     // 4. Tram: Linie 1 in Freiburg
     auto tram = std::make_shared<TrainTrip>(1004, bertoldsbrunnen, stadttheater, 800, 2, time4, TransportType::Tram, "Linie 1", vagfr);
