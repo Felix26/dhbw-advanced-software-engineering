@@ -11,6 +11,13 @@ option(BUILD_TESTS "Baut die Unit-Tests" ON)
 file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Coverage reporting enabled for Debug build")
+    set(COVERAGE_FLAGS --coverage -fprofile-arcs -ftest-coverage)
+    add_compile_options(${COVERAGE_FLAGS})
+    add_link_options(${COVERAGE_FLAGS})
+endif()
+
 add_library(logic_core STATIC ${LIB_SOURCES})
 target_include_directories(logic_core PUBLIC include external/json data)
 
